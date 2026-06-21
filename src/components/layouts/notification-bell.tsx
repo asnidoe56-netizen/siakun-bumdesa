@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -51,11 +52,32 @@ function formatNotificationTime(value: string) {
 }
 
 export function NotificationBell({
-  unreadCount,
   notifications,
 }: NotificationBellProps) {
+  const router = useRouter();
   const rootRef = React.useRef<HTMLDivElement>(null);
   const [open, setOpen] = React.useState(false);
+  const [readNotificationIds, setReadNotificationIds] = React.useState<
+    Set<string>
+  >(() => new Set());
+
+  const visibleNotifications = React.useMemo(
+    () =>
+      notifications.map((notification) =>
+        readNotificationIds.has(notification.id)
+          ? { ...notification, status: "READ" as const }
+          : notification
+      ),
+    [notifications, readNotificationIds]
+  );
+
+  const visibleUnreadCount = React.useMemo(
+    () =>
+      visibleNotifications.filter(
+        (notification) => notification.status === "UNREAD"
+      ).length,
+    [visibleNotifications]
+  );
 
   React.useEffect(() => {
     if (!open) {
@@ -91,6 +113,46 @@ export function NotificationBell({
     };
   }, [open]);
 
+  React.useEffect(() => {
+    if (!open || visibleUnreadCount === 0) {
+      return;
+    }
+
+    const unreadIds = visibleNotifications
+      .filter((notification) => notification.status === "UNREAD")
+      .map((notification) => notification.id);
+
+    let ignored = false;
+
+    async function markNotificationsAsRead() {
+      const response = await fetch("/api/platform/notifications/mark-read", {
+        method: "POST",
+      });
+
+      if (!response.ok || ignored) {
+        return;
+      }
+
+      setReadNotificationIds((current) => {
+        const next = new Set(current);
+
+        unreadIds.forEach((id) => {
+          next.add(id);
+        });
+
+        return next;
+      });
+
+      router.refresh();
+    }
+
+    void markNotificationsAsRead();
+
+    return () => {
+      ignored = true;
+    };
+  }, [open, router, visibleNotifications, visibleUnreadCount]);
+
   return (
     <div ref={rootRef} className={notificationBellStyles.root}>
       <button
@@ -102,9 +164,9 @@ export function NotificationBell({
       >
         <Bell className={notificationBellStyles.icon} />
 
-        {unreadCount > 0 ? (
+        {visibleUnreadCount > 0 ? (
           <span className={notificationBellStyles.counter}>
-            {unreadCount > 9 ? "9+" : unreadCount}
+            {visibleUnreadCount > 9 ? "9+" : visibleUnreadCount}
           </span>
         ) : null}
       </button>
@@ -113,14 +175,14 @@ export function NotificationBell({
         <div className={notificationBellStyles.panel}>
           <div className={notificationBellStyles.header}>
             <p className={notificationBellStyles.title}>Notifikasi</p>
-            <Badge variant={unreadCount > 0 ? "danger" : "muted"}>
-              {unreadCount} belum dibaca
+            <Badge variant={visibleUnreadCount > 0 ? "danger" : "muted"}>
+              {visibleUnreadCount} belum dibaca
             </Badge>
           </div>
 
-          {notifications.length > 0 ? (
+          {visibleNotifications.length > 0 ? (
             <div className={notificationBellStyles.list}>
-              {notifications.map((notification) => {
+              {visibleNotifications.map((notification) => {
                 const content = (
                   <>
                     <p className={notificationBellStyles.itemTitle}>
@@ -182,3 +244,5 @@ export function NotificationBell({
     </div>
   );
 }
+
+
