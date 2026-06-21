@@ -4,32 +4,42 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  FileText,
+  BarChart3,
+  ClipboardList,
+  Factory,
   LayoutDashboard,
   Menu,
+  Package,
   PanelLeftClose,
   PanelLeftOpen,
+  ShoppingCart,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { Button } from "@/components/ui/button";
 import { SidebarBrand } from "@/components/layouts/sidebar-brand";
 import { TopbarUser } from "@/components/layouts/topbar-user";
-
-type NavItem = {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-};
+import type {
+  UnitNavigationIconKey,
+  UnitNavigationItem,
+} from "@/lib/unit/get-unit-navigation";
 
 type UnitShellProps = {
   children: React.ReactNode;
+  navItems: UnitNavigationItem[];
 };
 
-const navItems: NavItem[] = [
-  { label: "Dashboard", href: "/unit/dashboard", icon: LayoutDashboard },
-  { label: "Catat Transaksi", href: "/unit/dashboard/catat-transaksi", icon: FileText },
-];
+const iconByKey: Record<
+  UnitNavigationIconKey,
+  React.ComponentType<{ className?: string }>
+> = {
+  dashboard: LayoutDashboard,
+  factory: Factory,
+  package: Package,
+  shoppingCart: ShoppingCart,
+  clipboardList: ClipboardList,
+  barChart: BarChart3,
+};
 
 const unitShellStyles = {
   root: "min-h-screen bg-slate-50",
@@ -80,7 +90,15 @@ const unitShellStyles = {
   },
 };
 
-export function UnitShell({ children }: UnitShellProps) {
+function isActiveNavItem(pathname: string, href: string) {
+  if (href === "/unit/dashboard") {
+    return pathname === href;
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+export function UnitShell({ children, navItems }: UnitShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [desktopCollapsed, setDesktopCollapsed] = React.useState(false);
@@ -144,8 +162,8 @@ export function UnitShell({ children }: UnitShellProps) {
           )}
         >
           {navItems.map((item) => {
-            const active = pathname === item.href;
-            const Icon = item.icon;
+            const active = isActiveNavItem(pathname, item.href);
+            const Icon = iconByKey[item.iconKey];
 
             return (
               <Link
@@ -196,8 +214,8 @@ export function UnitShell({ children }: UnitShellProps) {
 
             <nav className={unitShellStyles.mobileNav}>
               {navItems.map((item) => {
-                const active = pathname === item.href;
-                const Icon = item.icon;
+                const active = isActiveNavItem(pathname, item.href);
+                const Icon = iconByKey[item.iconKey];
 
                 return (
                   <Link

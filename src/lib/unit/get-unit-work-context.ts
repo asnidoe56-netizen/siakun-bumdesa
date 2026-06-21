@@ -6,6 +6,9 @@ export type UnitWorkContext = {
   unitUsahaId: string;
   unitUsahaName: string;
   unitCode: string;
+  businessCategoryId: string | null;
+  businessCategoryCode: string;
+  businessCategoryName: string;
   userId: string | null;
   userName: string;
   isDevelopmentFallback: boolean;
@@ -17,6 +20,14 @@ type UnitWorkContextRow = {
   unit_usaha_id: string;
   unit_usaha_name: string;
   unit_code: string;
+  business_category_id: string | null;
+  business_category_code: string | null;
+  business_category_name: string | null;
+};
+
+const developmentDefaultBusinessCategory = {
+  code: "PRODUKSI_BARANG_JADI",
+  name: "Produksi Barang Jadi",
 };
 
 export async function getUnitWorkContext(): Promise<UnitWorkContext> {
@@ -33,9 +44,13 @@ export async function getUnitWorkContext(): Promise<UnitWorkContext> {
         b.nama AS bum_desa_name,
         u.id::text AS unit_usaha_id,
         u.nama AS unit_usaha_name,
-        u.kode AS unit_code
+        u.kode AS unit_code,
+        buc.id::text AS business_category_id,
+        buc.code AS business_category_code,
+        buc.name AS business_category_name
       FROM bum_desa b
       JOIN unit_usaha u ON u.bum_desa_id = b.id
+      LEFT JOIN business_unit_category buc ON buc.id = u.business_category_id
       WHERE b.deleted_at IS NULL
         AND b.is_active = TRUE
         AND u.is_active = TRUE
@@ -58,6 +73,11 @@ export async function getUnitWorkContext(): Promise<UnitWorkContext> {
     unitUsahaId: row.unit_usaha_id,
     unitUsahaName: row.unit_usaha_name,
     unitCode: row.unit_code,
+    businessCategoryId: row.business_category_id,
+    businessCategoryCode:
+      row.business_category_code ?? developmentDefaultBusinessCategory.code,
+    businessCategoryName:
+      row.business_category_name ?? developmentDefaultBusinessCategory.name,
     userId: null,
     userName: "Operator Unit Development",
     isDevelopmentFallback: true,
