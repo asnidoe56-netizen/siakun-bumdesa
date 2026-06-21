@@ -8,7 +8,6 @@ import {
   ClipboardList,
   FileText,
   LayoutDashboard,
-  Menu,
   PanelLeftClose,
   PanelLeftOpen,
   ScrollText,
@@ -17,13 +16,20 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { Button } from "@/components/ui/button";
-import { TopbarUser } from "@/components/layouts/topbar-user";
+import { PlatformTopbar } from "@/components/layouts/platform-topbar";
+import type { NotificationItem } from "@/components/layouts/notification-bell";
 import { SidebarBrand } from "@/components/layouts/sidebar-brand";
 
 type NavItem = {
   label: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
+};
+
+type SuperAdminShellProps = {
+  children: React.ReactNode;
+  unreadCount?: number;
+  notifications?: NotificationItem[];
 };
 
 const navItems: NavItem[] = [
@@ -35,27 +41,71 @@ const navItems: NavItem[] = [
   { label: "Audit Log", href: "/platform/audit-log", icon: ScrollText },
 ];
 
-type SuperAdminShellProps = {
-  children: React.ReactNode;
+const superAdminShellStyles = {
+  root: "min-h-screen bg-slate-50",
+  desktopSidebar: {
+    base: "fixed inset-y-0 left-0 z-40 hidden border-r border-slate-200 bg-white transition-all duration-300 lg:block",
+    expanded: "w-72",
+    collapsed: "w-20",
+  },
+  sidebarHeader: {
+    base: "flex h-16 items-center border-b border-slate-200 px-4",
+    expanded: "justify-between",
+    collapsed: "justify-center",
+  },
+  iconButton: "h-9 w-9 px-0",
+  icon: "h-4 w-4",
+  collapseAction: "flex justify-center border-b border-slate-100 py-3",
+  nav: {
+    base: "space-y-1 py-4",
+    expanded: "px-3",
+    collapsed: "px-2",
+  },
+  navLink: {
+    base: "flex items-center rounded-lg text-sm font-medium transition-colors",
+    expanded: "gap-3 px-3 py-2",
+    collapsed: "justify-center px-3 py-3",
+    active: "bg-slate-900 text-white",
+    inactive: "text-slate-600 hover:bg-slate-100 hover:text-slate-950",
+  },
+  navIcon: "h-4 w-4 shrink-0",
+  mobileOverlay: "fixed inset-0 z-50 lg:hidden",
+  mobileBackdrop: "absolute inset-0 bg-slate-950/50",
+  mobileSidebar: "relative h-full w-80 max-w-[85vw] border-r border-slate-200 bg-white shadow-xl",
+  mobileHeader: "flex h-16 items-center justify-between border-b border-slate-200 px-4",
+  mobileNav: "space-y-1 px-3 py-4",
+  content: {
+    base: "transition-all duration-300",
+    expanded: "lg:pl-72",
+    collapsed: "lg:pl-20",
+  },
 };
 
-export function SuperAdminShell({ children }: SuperAdminShellProps) {
+export function SuperAdminShell({
+  children,
+  unreadCount = 0,
+  notifications = [],
+}: SuperAdminShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [desktopCollapsed, setDesktopCollapsed] = React.useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className={superAdminShellStyles.root}>
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 hidden border-r border-slate-200 bg-white transition-all duration-300 lg:block",
-          desktopCollapsed ? "w-20" : "w-72"
+          superAdminShellStyles.desktopSidebar.base,
+          desktopCollapsed
+            ? superAdminShellStyles.desktopSidebar.collapsed
+            : superAdminShellStyles.desktopSidebar.expanded
         )}
       >
         <div
           className={cn(
-            "flex h-16 items-center border-b border-slate-200 px-4",
-            desktopCollapsed ? "justify-center" : "justify-between"
+            superAdminShellStyles.sidebarHeader.base,
+            desktopCollapsed
+              ? superAdminShellStyles.sidebarHeader.collapsed
+              : superAdminShellStyles.sidebarHeader.expanded
           )}
         >
           <SidebarBrand
@@ -68,29 +118,36 @@ export function SuperAdminShell({ children }: SuperAdminShellProps) {
           {!desktopCollapsed ? (
             <Button
               variant="ghost"
-              className="h-9 w-9 px-0"
+              className={superAdminShellStyles.iconButton}
               aria-label="Sembunyikan sidebar"
               onClick={() => setDesktopCollapsed(true)}
             >
-              <PanelLeftClose className="h-4 w-4" />
+              <PanelLeftClose className={superAdminShellStyles.icon} />
             </Button>
           ) : null}
         </div>
 
         {desktopCollapsed ? (
-          <div className="flex justify-center border-b border-slate-100 py-3">
+          <div className={superAdminShellStyles.collapseAction}>
             <Button
               variant="ghost"
-              className="h-9 w-9 px-0"
+              className={superAdminShellStyles.iconButton}
               aria-label="Tampilkan sidebar"
               onClick={() => setDesktopCollapsed(false)}
             >
-              <PanelLeftOpen className="h-4 w-4" />
+              <PanelLeftOpen className={superAdminShellStyles.icon} />
             </Button>
           </div>
         ) : null}
 
-        <nav className={cn("space-y-1 py-4", desktopCollapsed ? "px-2" : "px-3")}>
+        <nav
+          className={cn(
+            superAdminShellStyles.nav.base,
+            desktopCollapsed
+              ? superAdminShellStyles.nav.collapsed
+              : superAdminShellStyles.nav.expanded
+          )}
+        >
           {navItems.map((item) => {
             const active = pathname === item.href;
             const Icon = item.icon;
@@ -101,14 +158,16 @@ export function SuperAdminShell({ children }: SuperAdminShellProps) {
                 href={item.href}
                 title={desktopCollapsed ? item.label : undefined}
                 className={cn(
-                  "flex items-center rounded-lg text-sm font-medium transition-colors",
-                  desktopCollapsed ? "justify-center px-3 py-3" : "gap-3 px-3 py-2",
+                  superAdminShellStyles.navLink.base,
+                  desktopCollapsed
+                    ? superAdminShellStyles.navLink.collapsed
+                    : superAdminShellStyles.navLink.expanded,
                   active
-                    ? "bg-slate-900 text-white"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                    ? superAdminShellStyles.navLink.active
+                    : superAdminShellStyles.navLink.inactive
                 )}
               >
-                <Icon className="h-4 w-4 shrink-0" />
+                <Icon className={superAdminShellStyles.navIcon} />
 
                 {!desktopCollapsed ? <span>{item.label}</span> : null}
               </Link>
@@ -118,16 +177,16 @@ export function SuperAdminShell({ children }: SuperAdminShellProps) {
       </aside>
 
       {mobileOpen ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className={superAdminShellStyles.mobileOverlay}>
           <button
             type="button"
             aria-label="Tutup menu"
-            className="absolute inset-0 bg-slate-950/50"
+            className={superAdminShellStyles.mobileBackdrop}
             onClick={() => setMobileOpen(false)}
           />
 
-          <aside className="relative h-full w-80 max-w-[85vw] border-r border-slate-200 bg-white shadow-xl">
-            <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4">
+          <aside className={superAdminShellStyles.mobileSidebar}>
+            <div className={superAdminShellStyles.mobileHeader}>
               <SidebarBrand
                 title="SiAkun BUM Desa"
                 subtitle="Super Admin Platform"
@@ -135,15 +194,15 @@ export function SuperAdminShell({ children }: SuperAdminShellProps) {
 
               <Button
                 variant="ghost"
-                className="h-9 w-9 px-0"
+                className={superAdminShellStyles.iconButton}
                 aria-label="Tutup menu"
                 onClick={() => setMobileOpen(false)}
               >
-                <X className="h-4 w-4" />
+                <X className={superAdminShellStyles.icon} />
               </Button>
             </div>
 
-            <nav className="space-y-1 px-3 py-4">
+            <nav className={superAdminShellStyles.mobileNav}>
               {navItems.map((item) => {
                 const active = pathname === item.href;
                 const Icon = item.icon;
@@ -154,13 +213,14 @@ export function SuperAdminShell({ children }: SuperAdminShellProps) {
                     href={item.href}
                     onClick={() => setMobileOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      superAdminShellStyles.navLink.base,
+                      superAdminShellStyles.navLink.expanded,
                       active
-                        ? "bg-slate-900 text-white"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                        ? superAdminShellStyles.navLink.active
+                        : superAdminShellStyles.navLink.inactive
                     )}
                   >
-                    <Icon className="h-4 w-4 shrink-0" />
+                    <Icon className={superAdminShellStyles.navIcon} />
                     <span>{item.label}</span>
                   </Link>
                 );
@@ -172,39 +232,20 @@ export function SuperAdminShell({ children }: SuperAdminShellProps) {
 
       <div
         className={cn(
-          "transition-all duration-300",
-          desktopCollapsed ? "lg:pl-20" : "lg:pl-72"
+          superAdminShellStyles.content.base,
+          desktopCollapsed
+            ? superAdminShellStyles.content.collapsed
+            : superAdminShellStyles.content.expanded
         )}
       >
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="secondary"
-              className="h-10 w-10 px-0 lg:hidden"
-              aria-label="Buka menu"
-              onClick={() => setMobileOpen(true)}
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-
-            <div>
-              <p className="text-sm font-semibold text-slate-950">Platform</p>
-              <p className="hidden text-xs text-slate-500 sm:block">
-                Kelola pendaftaran dan data BUMDes
-              </p>
-            </div>
-          </div>
-
-          <TopbarUser name="Super Admin" email="admin@siakun.local" />
-        </header>
+        <PlatformTopbar
+          onOpenMobileMenu={() => setMobileOpen(true)}
+          unreadCount={unreadCount}
+          notifications={notifications}
+        />
 
         {children}
       </div>
     </div>
   );
 }
-
-
-
-
-
