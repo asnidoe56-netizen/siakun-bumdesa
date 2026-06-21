@@ -107,7 +107,9 @@ async function main() {
   const templates = [
     ["T01", "Terima Pendapatan Tunai", "Pendapatan", "Mencatat penerimaan pendapatan tunai tanpa menampilkan debit/kredit"],
     ["T02", "Setor Tunai dari Kas ke Bank", "Kas dan Bank", "Memindahkan uang dari kas tunai ke rekening bank"],
-    ["T06", "Bayar Beban Tunai", "Pengeluaran", "Mencatat pembayaran beban operasional secara tunai"],
+    ["T05", "Unit Usaha Menyetor Pendapatan ke Kantor Pusat", "Penyetoran ke Pusat", "Mencatat penyetoran kas atau bank dari unit usaha ke kantor pusat melalui akun RK"],
+    ["T06", "Beli Barang/Jasa Tunai", "Pengeluaran", "Mencatat pembayaran barang atau jasa tunai yang langsung menjadi beban"],
+    ["T08", "Bayar/Lunasi Utang Usaha", "Pengeluaran", "Mencatat pembayaran atau pelunasan utang usaha menggunakan kas atau bank"],
     ["T09", "Bayar Gaji dan Tunjangan", "Pengeluaran", "Mencatat pembayaran gaji dan tunjangan karyawan"],
     ["T17", "Beli Alat Tulis atau Barang Pakai Habis", "Pengeluaran", "Mencatat pembelian perlengkapan habis pakai"],
     ["T19", "Terima Modal dari Desa atau Masyarakat", "Modal", "Mencatat penyertaan modal masuk ke BUM Desa"],
@@ -147,3 +149,4 @@ main().catch((error) => {
   console.error(error);
   process.exit(1);
 });
+
