@@ -1,4 +1,11 @@
-import { ArrowRight, Banknote, CircleDollarSign, Landmark, ReceiptText } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Banknote,
+  CircleDollarSign,
+  Landmark,
+  ReceiptText,
+} from "lucide-react";
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
 import { ResponsiveGrid } from "@/components/layouts/responsive-grid";
@@ -12,6 +19,7 @@ const transactionGroups = [
     title: "Terima Pendapatan Tunai",
     description: "Catat penerimaan kas dari penjualan atau pendapatan usaha.",
     templateCode: "T01",
+    href: "/unit/dashboard/catat-transaksi/terima-pendapatan-tunai",
     icon: CircleDollarSign,
     status: "Siap",
   },
@@ -19,22 +27,25 @@ const transactionGroups = [
     title: "Setor Tunai ke Bank",
     description: "Catat pemindahan uang dari kas tunai ke rekening bank.",
     templateCode: "T02",
+    href: null,
     icon: Landmark,
-    status: "Siap",
+    status: "Berikutnya",
   },
   {
     title: "Beli Barang/Jasa Tunai",
     description: "Catat pengeluaran kas untuk pembelian barang atau jasa.",
     templateCode: "T06",
+    href: null,
     icon: ReceiptText,
-    status: "Siap",
+    status: "Berikutnya",
   },
   {
     title: "Terima Modal",
     description: "Catat penerimaan modal dari desa atau masyarakat.",
     templateCode: "T19",
+    href: null,
     icon: Banknote,
-    status: "Siap",
+    status: "Berikutnya",
   },
 ];
 
@@ -52,6 +63,7 @@ const catatTransaksiStyles = {
   footer: "mt-5 flex items-center justify-between border-t border-slate-100 pt-4",
   templateCode: "text-xs font-medium text-slate-500",
   action: "inline-flex items-center gap-2 text-sm font-semibold text-slate-900",
+  disabledAction: "inline-flex items-center gap-2 text-sm font-semibold text-slate-400",
   actionIcon: "h-4 w-4",
 };
 
@@ -87,7 +99,9 @@ export default function CatatTransaksiPage() {
                       <Icon className={catatTransaksiStyles.icon} />
                     </div>
 
-                    <Badge variant="success">{item.status}</Badge>
+                    <Badge variant={item.href ? "success" : "muted"}>
+                      {item.status}
+                    </Badge>
                   </div>
 
                   <div>
@@ -104,10 +118,20 @@ export default function CatatTransaksiPage() {
                       Template {item.templateCode}
                     </span>
 
-                    <span className={catatTransaksiStyles.action}>
-                      Siapkan Form
-                      <ArrowRight className={catatTransaksiStyles.actionIcon} />
-                    </span>
+                    {item.href ? (
+                      <Link
+                        href={item.href}
+                        className={catatTransaksiStyles.action}
+                      >
+                        Siapkan Form
+                        <ArrowRight className={catatTransaksiStyles.actionIcon} />
+                      </Link>
+                    ) : (
+                      <span className={catatTransaksiStyles.disabledAction}>
+                        Segera
+                        <ArrowRight className={catatTransaksiStyles.actionIcon} />
+                      </span>
+                    )}
                   </div>
                 </CardContent>
               </Card>
