@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Boxes } from "lucide-react";
+import { ArrowLeft, Boxes, PlusCircle } from "lucide-react";
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import {
   getMaterialStockList,
 } from "@/lib/unit/get-material-stock-data";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { createMaterialStockInAction } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +56,17 @@ const materialStockPageStyles = {
   emptyTitle: "mt-4 text-base font-semibold text-slate-950",
   emptyDescription: "mt-2 text-sm leading-6 text-slate-600",
   infoBox: "rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600",
+  formGrid: "grid gap-4 md:grid-cols-2 xl:grid-cols-4",
+  fieldGroup: "space-y-2",
+  label: "text-sm font-medium text-slate-700",
+  input:
+    "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 shadow-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200",
+  textarea:
+    "min-h-20 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 shadow-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200",
+  formActions: "mt-5 flex justify-end",
+  submitButton:
+    "inline-flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800",
+  submitIcon: "h-4 w-4",
 };
 
 function formatDecimal(value: string) {
@@ -148,6 +160,115 @@ export default async function MaterialStockPage() {
           sudah mencatat bahan keluar. Jika belum ada pencatatan bahan masuk dari
           pembelian atau penyesuaian stok, saldo bahan dapat terlihat minus.
         </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Catat Stok Awal / Bahan Masuk</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form action={createMaterialStockInAction}>
+              <div className={materialStockPageStyles.formGrid}>
+                <div className={materialStockPageStyles.fieldGroup}>
+                  <label
+                    htmlFor="movementDate"
+                    className={materialStockPageStyles.label}
+                  >
+                    Tanggal
+                  </label>
+                  <input
+                    id="movementDate"
+                    name="movementDate"
+                    type="date"
+                    required
+                    defaultValue={new Date().toISOString().slice(0, 10)}
+                    className={materialStockPageStyles.input}
+                  />
+                </div>
+
+                <div className={materialStockPageStyles.fieldGroup}>
+                  <label
+                    htmlFor="materialId"
+                    className={materialStockPageStyles.label}
+                  >
+                    Bahan / Komponen
+                  </label>
+                  <select
+                    id="materialId"
+                    name="materialId"
+                    required
+                    className={materialStockPageStyles.input}
+                  >
+                    <option value="">Pilih bahan</option>
+                    {stocks.map((stock) => (
+                      <option key={stock.materialId} value={stock.materialId}>
+                        {stock.materialName} ({stock.unitOfMeasure})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={materialStockPageStyles.fieldGroup}>
+                  <label
+                    htmlFor="quantity"
+                    className={materialStockPageStyles.label}
+                  >
+                    Jumlah Masuk
+                  </label>
+                  <input
+                    id="quantity"
+                    name="quantity"
+                    type="number"
+                    step="0.0001"
+                    min="0.0001"
+                    required
+                    placeholder="Contoh: 100"
+                    className={materialStockPageStyles.input}
+                  />
+                </div>
+
+                <div className={materialStockPageStyles.fieldGroup}>
+                  <label
+                    htmlFor="unitCost"
+                    className={materialStockPageStyles.label}
+                  >
+                    Biaya per Satuan
+                  </label>
+                  <input
+                    id="unitCost"
+                    name="unitCost"
+                    type="number"
+                    step="0.000001"
+                    min="0"
+                    placeholder="Contoh: 5000"
+                    className={materialStockPageStyles.input}
+                  />
+                </div>
+              </div>
+
+              <div className={`${materialStockPageStyles.fieldGroup} mt-4`}>
+                <label htmlFor="notes" className={materialStockPageStyles.label}>
+                  Catatan
+                </label>
+                <textarea
+                  id="notes"
+                  name="notes"
+                  placeholder="Contoh: Stok awal sebelum pencatatan produksi"
+                  className={materialStockPageStyles.textarea}
+                />
+              </div>
+
+              <div className={materialStockPageStyles.formActions}>
+                <button
+                  type="submit"
+                  className={materialStockPageStyles.submitButton}
+                >
+                  <PlusCircle className={materialStockPageStyles.submitIcon} />
+                  Simpan Bahan Masuk
+                </button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
 
         {stocks.length > 0 ? (
           <div className={materialStockPageStyles.grid}>
