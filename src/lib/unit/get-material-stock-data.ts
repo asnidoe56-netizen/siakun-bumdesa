@@ -146,7 +146,7 @@ export async function getMaterialMovementList(
         AND psm.unit_usaha_id = $2::uuid
         AND psm.item_type = 'MATERIAL'
       ORDER BY psm.movement_date DESC, psm.created_at DESC
-      LIMIT 50
+      LIMIT 20
     `,
     [context.bumDesaId, context.unitUsahaId]
   );

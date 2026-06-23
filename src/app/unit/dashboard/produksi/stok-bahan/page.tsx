@@ -35,14 +35,14 @@ const materialStockPageStyles = {
   stockValueAmount: "mt-1 text-sm font-semibold text-slate-900",
   stockValueMinus: "mt-1 text-sm font-semibold text-rose-700",
   tableWrapper: "overflow-hidden rounded-xl border border-slate-200 bg-white",
-  tableScroll: "w-full overflow-x-auto",
-  table: "min-w-full divide-y divide-slate-200 text-sm",
+  tableScroll: "w-full overflow-x-auto lg:overflow-x-visible",
+  table: "w-full table-fixed divide-y divide-slate-200 text-sm",
   tableHead: "bg-slate-50",
   tableHeadCell:
     "whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500",
   tableBody: "divide-y divide-slate-100 bg-white",
-  tableCell: "whitespace-nowrap px-4 py-3 text-slate-700",
-  tableCellStrong: "whitespace-nowrap px-4 py-3 font-semibold text-slate-950",
+  tableCell: "break-words px-3 py-3 text-slate-700",
+  tableCellStrong: "break-words px-3 py-3 font-semibold text-slate-950",
   badgeIn:
     "inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700",
   badgeOut:
