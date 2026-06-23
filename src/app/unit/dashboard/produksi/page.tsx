@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Boxes,
   ClipboardList,
   Factory,
   FlaskConical,
@@ -53,6 +54,15 @@ const productionCards = [
     icon: Wheat,
     badge: "Tahap 2",
     footer: "Setelah produk",
+  },
+  {
+    title: "Stok Bahan / Komponen",
+    description:
+      "Pantau saldo bahan baku dan komponen dari bahan masuk, bahan keluar, serta pemakaian produksi.",
+    href: "/unit/dashboard/produksi/stok-bahan",
+    icon: Boxes,
+    badge: "Kontrol Stok",
+    footer: "Monitoring",
   },
   {
     title: "Formula / Resep Produksi",
