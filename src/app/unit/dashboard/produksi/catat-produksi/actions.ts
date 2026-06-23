@@ -23,8 +23,15 @@ type FormulaLineRow = {
   material_unit_of_measure: string;
   formula_quantity: string;
   default_unit_cost: string;
+  is_stocked: boolean;
   notes: string | null;
   sort_order: number;
+};
+
+type MaterialStockCostRow = {
+  quantity_on_hand: string;
+  total_value: string;
+  average_unit_cost: string | null;
 };
 
 function getRequiredText(formData: FormData, key: string) {
@@ -158,6 +165,7 @@ export async function createProductionBatchAction(formData: FormData) {
           pm.unit_of_measure AS material_unit_of_measure,
           pfl.quantity::text AS formula_quantity,
           pm.default_unit_cost::text AS default_unit_cost,
+          pm.is_stocked,
           pfl.notes,
           pfl.sort_order
         FROM production_formula_line pfl
@@ -252,11 +260,88 @@ export async function createProductionBatchAction(formData: FormData) {
           formData,
           `actualQuantity_${line.formula_line_id}`
         ) ?? plannedQuantity;
-      const unitCost =
-        getOptionalNonNegativeNumber(
-          formData,
-          `unitCost_${line.formula_line_id}`
-        ) ?? defaultUnitCost;
+
+      const stockCostResult = await client.query<MaterialStockCostRow>(
+        `
+          WITH material_stock AS (
+            SELECT
+              COALESCE(
+                SUM(
+                  CASE
+                    WHEN movement_direction = 'IN' THEN quantity
+                    WHEN movement_direction = 'OUT' THEN -quantity
+                    ELSE 0
+                  END
+                ),
+                0
+              ) AS quantity_on_hand,
+              COALESCE(
+                SUM(
+                  CASE
+                    WHEN movement_direction = 'IN' THEN total_amount
+                    WHEN movement_direction = 'OUT' THEN -total_amount
+                    ELSE 0
+                  END
+                ),
+                0
+              ) AS total_value
+            FROM production_stock_movement
+            WHERE bum_desa_id = $1::uuid
+              AND unit_usaha_id = $2::uuid
+              AND item_type = 'MATERIAL'
+              AND material_id = $3::uuid
+              AND movement_date <= $4::date
+          )
+          SELECT
+            quantity_on_hand::text AS quantity_on_hand,
+            total_value::text AS total_value,
+            CASE
+              WHEN quantity_on_hand > 0
+              THEN (total_value / quantity_on_hand)::numeric(18,6)::text
+              ELSE NULL
+            END AS average_unit_cost
+          FROM material_stock
+        `,
+        [
+          context.bumDesaId,
+          context.unitUsahaId,
+          line.material_id,
+          productionDate,
+        ]
+      );
+
+      const stockCost = stockCostResult.rows[0];
+      const stockQuantity = Number(stockCost?.quantity_on_hand ?? "0");
+      const rawAverageUnitCost = stockCost?.average_unit_cost ?? null;
+      const averageUnitCost =
+        rawAverageUnitCost === null ? null : Number(rawAverageUnitCost);
+
+      if (!Number.isFinite(stockQuantity)) {
+        throw new Error(`Saldo stok bahan ${line.material_name} tidak valid.`);
+      }
+
+      if (line.is_stocked && stockQuantity < actualQuantity) {
+        throw new Error(
+          `Stok ${line.material_name} tidak cukup. Tersedia ${stockQuantity}, dibutuhkan ${actualQuantity}.`
+        );
+      }
+
+      if (
+        averageUnitCost !== null &&
+        (!Number.isFinite(averageUnitCost) || averageUnitCost < 0)
+      ) {
+        throw new Error(`Rata-rata biaya bahan ${line.material_name} tidak valid.`);
+      }
+
+      const inputUnitCost = getOptionalNonNegativeNumber(
+        formData,
+        `unitCost_${line.formula_line_id}`
+      );
+      const unitCost = inputUnitCost ?? averageUnitCost ?? defaultUnitCost;
+
+      if (!Number.isFinite(unitCost) || unitCost < 0) {
+        throw new Error(`Biaya bahan ${line.material_name} tidak valid.`);
+      }
 
       await client.query(
         `
