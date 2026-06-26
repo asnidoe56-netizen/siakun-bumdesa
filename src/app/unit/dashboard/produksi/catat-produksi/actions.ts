@@ -333,11 +333,38 @@ export async function createProductionBatchAction(formData: FormData) {
         throw new Error(`Rata-rata biaya bahan ${line.material_name} tidak valid.`);
       }
 
+      const costMode = String(
+        formData.get(`unitCostMode_${line.formula_line_id}`) ?? "AUTO"
+      ).trim();
+
+      if (costMode !== "AUTO" && costMode !== "MANUAL") {
+        throw new Error(`Mode biaya bahan ${line.material_name} tidak valid.`);
+      }
+
       const inputUnitCost = getOptionalNonNegativeNumber(
         formData,
         `unitCost_${line.formula_line_id}`
       );
-      const unitCost = inputUnitCost ?? averageUnitCost ?? defaultUnitCost;
+
+      let unitCost: number;
+      let unitCostSource: "STOCK_AVERAGE" | "DEFAULT" | "MANUAL";
+
+      if (costMode === "MANUAL") {
+        if (inputUnitCost === null) {
+          throw new Error(
+            `Harga satuan manual untuk ${line.material_name} wajib diisi.`
+          );
+        }
+
+        unitCost = inputUnitCost;
+        unitCostSource = "MANUAL";
+      } else if (averageUnitCost !== null) {
+        unitCost = averageUnitCost;
+        unitCostSource = "STOCK_AVERAGE";
+      } else {
+        unitCost = defaultUnitCost;
+        unitCostSource = "DEFAULT";
+      }
 
       if (!Number.isFinite(unitCost) || unitCost < 0) {
         throw new Error(`Biaya bahan ${line.material_name} tidak valid.`);
@@ -391,6 +418,7 @@ export async function createProductionBatchAction(formData: FormData) {
           line.sort_order,
           formulaQuantity,
           productionRatio,
+          unitCostSource,
         ]
       );
 

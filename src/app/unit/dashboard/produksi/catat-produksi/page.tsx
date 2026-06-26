@@ -283,11 +283,55 @@ export default async function ProductionRecordingPage({
                               </div>
 
                               <div className={recordingPageStyles.fieldGroup}>
+                                <Label className={recordingPageStyles.label}>
+                                  Mode Biaya
+                                </Label>
+
+                                <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                                  <label className="flex items-start gap-2 text-sm text-slate-700">
+                                    <input
+                                      type="radio"
+                                      name={`unitCostMode_${line.id}`}
+                                      value="AUTO"
+                                      defaultChecked
+                                      className="mt-1"
+                                    />
+                                    <span>
+                                      <span className="font-medium text-slate-900">
+                                        Otomatis dari stok
+                                      </span>
+                                      <span className="block text-xs text-slate-500">
+                                        Nilai saat ini: Rp{" "}
+                                        {Number(
+                                          line.automaticUnitCost ?? line.unitCost
+                                        ).toLocaleString("id-ID")}
+                                      </span>
+                                    </span>
+                                  </label>
+
+                                  <label className="flex items-start gap-2 text-sm text-slate-700">
+                                    <input
+                                      type="radio"
+                                      name={`unitCostMode_${line.id}`}
+                                      value="MANUAL"
+                                      className="mt-1"
+                                    />
+                                    <span>
+                                      <span className="font-medium text-slate-900">
+                                        Isi manual
+                                      </span>
+                                      <span className="block text-xs text-slate-500">
+                                        Pilih ini hanya jika ingin mengganti biaya.
+                                      </span>
+                                    </span>
+                                  </label>
+                                </div>
+
                                 <Label
                                   htmlFor={`unitCost_${line.id}`}
                                   className={recordingPageStyles.label}
                                 >
-                                  Harga Satuan
+                                  Harga Satuan Manual
                                 </Label>
                                 <Input
                                   id={`unitCost_${line.id}`}
@@ -295,7 +339,7 @@ export default async function ProductionRecordingPage({
                                   type="number"
                                   min="0"
                                   step="1"
-                                  placeholder={line.unitCost}
+                                  placeholder="Kosongkan jika otomatis"
                                 />
                               </div>
                             </div>

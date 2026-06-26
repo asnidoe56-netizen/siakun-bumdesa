@@ -11,6 +11,7 @@ export type ProductionRecordingFormulaLine = {
   unitOfMeasure: string;
   formulaQuantity: string;
   unitCost: string;
+  automaticUnitCost: string | null;
   notes: string | null;
   sortOrder: number;
 };
@@ -58,6 +59,7 @@ type FormulaRow = {
   material_unit_of_measure: string | null;
   formula_quantity: string | null;
   unit_cost: string | null;
+  automatic_unit_cost: string | null;
   line_notes: string | null;
   sort_order: number | null;
 };
@@ -79,6 +81,29 @@ export async function getProductionRecordingFormulaOptions(
 ): Promise<ProductionRecordingFormulaOption[]> {
   const result = await db.query<FormulaRow>(
     `
+      WITH material_stock_summary AS (
+        SELECT
+          material_id,
+          SUM(
+            CASE
+              WHEN movement_direction = 'IN' THEN quantity
+              WHEN movement_direction = 'OUT' THEN -quantity
+              ELSE 0
+            END
+          ) AS quantity_on_hand,
+          SUM(
+            CASE
+              WHEN movement_direction = 'IN' THEN total_amount
+              WHEN movement_direction = 'OUT' THEN -total_amount
+              ELSE 0
+            END
+          ) AS total_value
+        FROM production_stock_movement
+        WHERE bum_desa_id = $1::uuid
+          AND unit_usaha_id = $2::uuid
+          AND item_type = 'MATERIAL'
+        GROUP BY material_id
+      )
       SELECT
         pf.id::text AS formula_id,
         pf.code AS formula_code,
@@ -106,6 +131,8 @@ export async function getProductionRecordingFormulaOptions(
         ON pfl.formula_id = pf.id
       LEFT JOIN production_material pm
         ON pm.id = pfl.material_id
+      LEFT JOIN material_stock_summary mss
+        ON mss.material_id = pm.id
       WHERE pf.bum_desa_id = $1::uuid
         AND pf.unit_usaha_id = $2::uuid
         AND pf.is_active = TRUE
@@ -160,6 +187,7 @@ export async function getProductionRecordingFormulaOptions(
         unitOfMeasure: row.material_unit_of_measure,
         formulaQuantity: row.formula_quantity,
         unitCost: row.unit_cost,
+        automaticUnitCost: row.automatic_unit_cost,
         notes: row.line_notes,
         sortOrder: row.sort_order ?? 0,
       });
