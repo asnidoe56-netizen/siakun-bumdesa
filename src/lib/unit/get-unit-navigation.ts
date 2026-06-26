@@ -43,7 +43,7 @@ const productionFinishedGoodsNavigation: UnitNavigationItem[] = [
   },
   {
     label: "Penjualan Produk",
-    href: "/unit/dashboard/catat-transaksi",
+    href: "/unit/dashboard/penjualan-produk",
     iconKey: "shoppingCart",
   },
   {

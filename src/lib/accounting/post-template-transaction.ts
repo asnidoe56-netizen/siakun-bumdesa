@@ -1,4 +1,5 @@
 import { db } from "@/lib/db/pool";
+import type { PoolClient } from "pg";
 
 export type PostTemplateTransactionInput = {
   bumDesaId: string;
@@ -31,14 +32,17 @@ function requireNonEmpty(value: string | null | undefined, fieldName: string) {
 }
 
 export async function postTemplateTransaction(
-  input: PostTemplateTransactionInput
+  input: PostTemplateTransactionInput,
+  client?: PoolClient
 ): Promise<PostTemplateTransactionResult> {
   const bumDesaId = requireNonEmpty(input.bumDesaId, "BUMDes");
   const unitUsahaId = requireNonEmpty(input.unitUsahaId, "Unit usaha");
   const templateCode = requireNonEmpty(input.templateCode, "Template transaksi");
   const tanggal = requireNonEmpty(input.tanggal, "Tanggal transaksi");
 
-  const result = await db.query<PostTemplateTransactionRow>(
+  const queryExecutor = client ?? db;
+
+  const result = await queryExecutor.query<PostTemplateTransactionRow>(
     `
       SELECT
         journal_header_id::text,
