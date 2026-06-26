@@ -25,6 +25,7 @@ export const dynamic = "force-dynamic";
 type ProductionRecordingPageProps = {
   searchParams: Promise<{
     created?: string;
+    mode?: string;
   }>;
 };
 
@@ -58,14 +59,14 @@ const recordingPageStyles = {
   contextLabel: "text-xs font-medium uppercase tracking-wide text-slate-500",
   contextValue: "mt-1 break-words font-semibold text-slate-900",
   tableWrapper: "overflow-hidden rounded-xl border border-slate-200 bg-white",
-  tableScroll: "w-full overflow-x-auto",
-  table: "min-w-full divide-y divide-slate-200 text-sm",
+  tableScroll: "w-full overflow-x-auto lg:overflow-x-visible",
+  table: "w-full table-fixed divide-y divide-slate-200 text-sm",
   tableHead: "bg-slate-50",
   tableHeadCell:
     "whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500",
   tableBody: "divide-y divide-slate-100 bg-white",
-  tableCell: "whitespace-nowrap px-4 py-3 text-slate-700",
-  tableCellStrong: "whitespace-nowrap px-4 py-3 font-semibold text-slate-950",
+  tableCell: "break-words px-3 py-3 text-slate-700",
+  tableCellStrong: "break-words px-3 py-3 font-semibold text-slate-950",
   emptyState:
     "rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center",
   emptyIcon:
@@ -110,13 +111,16 @@ export default async function ProductionRecordingPage({
   const params = await searchParams;
   const context = await getUnitWorkContext();
 
-  const [formulas, batches] = await Promise.all([
-    getProductionRecordingFormulaOptions(context),
-    getProductionBatchList(context),
-  ]);
-
+  const isCreateMode = params.mode === "create";
   const createdBatch = params.created;
   const today = getTodayInputValue();
+
+  const [formulas, batches] = await Promise.all([
+    isCreateMode
+      ? getProductionRecordingFormulaOptions(context)
+      : Promise.resolve([]),
+    getProductionBatchList(context),
+  ]);
 
   return (
     <PageContainer>
@@ -143,7 +147,7 @@ export default async function ProductionRecordingPage({
           </Alert>
         ) : null}
 
-        {formulas.length === 0 ? (
+        {isCreateMode && formulas.length === 0 ? (
           <Alert>
             <AlertTitle>Belum ada resep aktif</AlertTitle>
             <AlertDescription>
@@ -153,9 +157,30 @@ export default async function ProductionRecordingPage({
           </Alert>
         ) : null}
 
-        <div className={recordingPageStyles.grid}>
-          <div className="min-w-0 space-y-6">
-            {formulas.length > 0 ? (
+                {!isCreateMode ? (
+          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-base font-semibold text-slate-950">
+                Riwayat Produksi
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-slate-600">
+                Pantau produksi terakhir. Klik tombol Catat Produksi jika ingin
+                menambahkan produksi baru.
+              </p>
+            </div>
+            <Link
+              href="/unit/dashboard/produksi/catat-produksi?mode=create"
+              className="inline-flex items-center justify-center rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            >
+              Catat Produksi
+            </Link>
+          </div>
+        ) : null}
+
+        <div className={isCreateMode ? recordingPageStyles.grid : "grid w-full min-w-0 gap-6"}>
+          {isCreateMode ? (
+            <div className="min-w-0 space-y-6">
+              {formulas.length > 0 ? (
               formulas.map((formula) => (
                 <Card key={formula.id} className={recordingPageStyles.formulaCard}>
                   <CardHeader className={recordingPageStyles.formulaHeader}>
@@ -252,6 +277,49 @@ export default async function ProductionRecordingPage({
                           </p>
                         </div>
 
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                          <Label className={recordingPageStyles.label}>
+                            Mode Biaya Produksi
+                          </Label>
+
+                          <div className="mt-3 grid gap-3 md:grid-cols-2">
+                            <label className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-700">
+                              <input
+                                type="radio"
+                                name="unitCostMode"
+                                value="AUTO"
+                                defaultChecked
+                                className="mt-1"
+                              />
+                              <span>
+                                <span className="font-medium text-slate-900">
+                                  Otomatis dari stok berjalan
+                                </span>
+                                <span className="block text-xs leading-5 text-slate-500">
+                                  Semua bahan memakai rata-rata biaya stok dari database.
+                                </span>
+                              </span>
+                            </label>
+
+                            <label className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-700">
+                              <input
+                                type="radio"
+                                name="unitCostMode"
+                                value="MANUAL"
+                                className="mt-1"
+                              />
+                              <span>
+                                <span className="font-medium text-slate-900">
+                                  Isi manual
+                                </span>
+                                <span className="block text-xs leading-5 text-slate-500">
+                                  Semua harga satuan manual bahan wajib diisi.
+                                </span>
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+
                         {formula.lines.map((line) => (
                           <div key={line.id} className={recordingPageStyles.lineBox}>
                             <p className={recordingPageStyles.lineTitle}>
@@ -281,65 +349,26 @@ export default async function ProductionRecordingPage({
                                   placeholder="Otomatis"
                                 />
                               </div>
-
                               <div className={recordingPageStyles.fieldGroup}>
-                                <Label className={recordingPageStyles.label}>
-                                  Mode Biaya
-                                </Label>
-
-                                <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
-                                  <label className="flex items-start gap-2 text-sm text-slate-700">
-                                    <input
-                                      type="radio"
-                                      name={`unitCostMode_${line.id}`}
-                                      value="AUTO"
-                                      defaultChecked
-                                      className="mt-1"
-                                    />
-                                    <span>
-                                      <span className="font-medium text-slate-900">
-                                        Otomatis dari stok
-                                      </span>
-                                      <span className="block text-xs text-slate-500">
-                                        Nilai saat ini: Rp{" "}
-                                        {Number(
-                                          line.automaticUnitCost ?? line.unitCost
-                                        ).toLocaleString("id-ID")}
-                                      </span>
-                                    </span>
-                                  </label>
-
-                                  <label className="flex items-start gap-2 text-sm text-slate-700">
-                                    <input
-                                      type="radio"
-                                      name={`unitCostMode_${line.id}`}
-                                      value="MANUAL"
-                                      className="mt-1"
-                                    />
-                                    <span>
-                                      <span className="font-medium text-slate-900">
-                                        Isi manual
-                                      </span>
-                                      <span className="block text-xs text-slate-500">
-                                        Pilih ini hanya jika ingin mengganti biaya.
-                                      </span>
-                                    </span>
-                                  </label>
-                                </div>
-
                                 <Label
                                   htmlFor={`unitCost_${line.id}`}
                                   className={recordingPageStyles.label}
                                 >
                                   Harga Satuan Manual
                                 </Label>
+                                <p className={recordingPageStyles.helpText}>
+                                  Otomatis saat ini:{" "}
+                                  {formatCurrency(
+                                    line.automaticUnitCost ?? line.unitCost
+                                  )}
+                                </p>
                                 <Input
                                   id={`unitCost_${line.id}`}
                                   name={`unitCost_${line.id}`}
                                   type="number"
                                   min="0"
                                   step="1"
-                                  placeholder="Kosongkan jika otomatis"
+                                  placeholder="Kosongkan jika mode otomatis"
                                 />
                               </div>
                             </div>
@@ -353,21 +382,8 @@ export default async function ProductionRecordingPage({
                     </form>
                   </CardContent>
                 </Card>
-              ))
-            ) : (
-              <div className={recordingPageStyles.emptyState}>
-                <div className={recordingPageStyles.emptyIcon}>
-                  <Factory className="h-6 w-6" />
-                </div>
-                <h2 className={recordingPageStyles.emptyTitle}>
-                  Belum bisa mencatat produksi
-                </h2>
-                <p className={recordingPageStyles.emptyDescription}>
-                  Tambahkan produk, bahan, dan formula produksi terlebih dahulu.
-                </p>
-              </div>
-            )}
-          </div>
+              ))            ) : null}          </div>
+          ) : null}
 
           <div className="min-w-0 space-y-6">
             <Card className="min-w-0 overflow-hidden">
@@ -437,36 +453,6 @@ export default async function ProductionRecordingPage({
                     </p>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-
-            <Card className="min-w-0 overflow-hidden">
-              <CardHeader>
-                <CardTitle>Konteks Unit</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className={recordingPageStyles.contextList}>
-                  <div className={recordingPageStyles.contextItem}>
-                    <p className={recordingPageStyles.contextLabel}>BUMDes</p>
-                    <p className={recordingPageStyles.contextValue}>
-                      {context.bumDesaName}
-                    </p>
-                  </div>
-                  <div className={recordingPageStyles.contextItem}>
-                    <p className={recordingPageStyles.contextLabel}>Unit Usaha</p>
-                    <p className={recordingPageStyles.contextValue}>
-                      {context.unitUsahaName}
-                    </p>
-                  </div>
-                  <div className={recordingPageStyles.contextItem}>
-                    <p className={recordingPageStyles.contextLabel}>
-                      Kategori Bisnis
-                    </p>
-                    <p className={recordingPageStyles.contextValue}>
-                      {context.businessCategoryName}
-                    </p>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>

@@ -241,6 +241,11 @@ export async function createProductionBatchAction(formData: FormData) {
     }
 
     const productionRatio = outputQuantity / formulaOutputQuantity;
+    const globalCostMode = String(formData.get("unitCostMode") ?? "AUTO").trim();
+
+    if (globalCostMode !== "AUTO" && globalCostMode !== "MANUAL") {
+      throw new Error("Mode biaya produksi tidak valid.");
+    }
 
     for (const line of formulaLinesResult.rows) {
       const formulaQuantity = Number(line.formula_quantity);
@@ -334,7 +339,7 @@ export async function createProductionBatchAction(formData: FormData) {
       }
 
       const costMode = String(
-        formData.get(`unitCostMode_${line.formula_line_id}`) ?? "AUTO"
+        formData.get(`unitCostMode_${line.formula_line_id}`) ?? globalCostMode
       ).trim();
 
       if (costMode !== "AUTO" && costMode !== "MANUAL") {
@@ -400,7 +405,8 @@ export async function createProductionBatchAction(formData: FormData) {
             $11,
             jsonb_build_object(
               'formula_quantity', $12::numeric,
-              'production_ratio', $13::numeric
+              'production_ratio', $13::numeric,
+              'unit_cost_source', $14::text
             )
           )
         `,
