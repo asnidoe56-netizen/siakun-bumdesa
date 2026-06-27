@@ -37,6 +37,11 @@ const productionFinishedGoodsNavigation: UnitNavigationItem[] = [
     iconKey: "factory",
   },
   {
+    label: "Pembelian Bahan",
+    href: "/unit/dashboard/pembelian-bahan",
+    iconKey: "clipboardList",
+  },
+  {
     label: "Barang Jadi",
     href: "/unit/dashboard/barang-jadi",
     iconKey: "package",
