@@ -25,6 +25,14 @@ const centralOfficeTransactionGroups = [
     icon: Banknote,
     status: "Siap",
   },
+  {
+    title: "Alokasi Kas ke Unit",
+    description: "Catat pemindahan kas dari Kantor Pusat ke unit usaha aktif dalam BUMDes yang sama.",
+    templateCode: "MANUAL",
+    href: "/unit/dashboard/catat-transaksi/alokasi-kas-unit",
+    icon: CircleDollarSign,
+    status: "Siap",
+  },
 ];
 
 const defaultTransactionGroups = [
