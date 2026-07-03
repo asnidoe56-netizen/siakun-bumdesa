@@ -57,11 +57,7 @@ const productionFinishedGoodsNavigation: UnitNavigationItem[] = [
     iconKey: "shoppingCart",
   },
 
-  {
-    label: "Laporan Unit",
-    href: "/unit/dashboard/laporan",
-    iconKey: "barChart",
-  },
+
 ];
 
 export function getUnitNavigation(

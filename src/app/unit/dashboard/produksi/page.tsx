@@ -5,7 +5,6 @@ import {
   ClipboardList,
   Factory,
   FlaskConical,
-  History,
   Package,
   Wheat,
 } from "lucide-react";
@@ -82,15 +81,7 @@ const productionCards = [
     badge: "Tahap 4",
     footer: "Setelah master data",
   },
-  {
-    title: "Riwayat Produksi",
-    description:
-      "Pantau daftar produksi yang sudah dicatat, termasuk tanggal, produk, jumlah hasil, dan status pencatatan.",
-    href: "/unit/dashboard/produksi/riwayat",
-    icon: History,
-    badge: "Tahap 5",
-    footer: "Monitoring",
-  },
+
   {
     title: "Stok Produksi",
     description:
