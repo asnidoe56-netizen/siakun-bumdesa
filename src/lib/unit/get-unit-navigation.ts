@@ -42,7 +42,7 @@ const productionFinishedGoodsNavigation: UnitNavigationItem[] = [
     iconKey: "clipboardList",
   },
   {
-    label: "Pelunasan Utang",
+    label: "Utang Supplier",
     href: "/unit/dashboard/pelunasan-utang-supplier",
     iconKey: "clipboardList",
   },
