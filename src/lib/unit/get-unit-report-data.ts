@@ -71,7 +71,7 @@ export async function getUnitReportSummary(
         JOIN akun a
           ON a.id = jl.akun_id
         WHERE jh.bum_desa_id = $1::uuid
-          AND jh.unit_usaha_id = $2::uuid
+          AND jl.unit_usaha_id = $2::uuid
           AND jh.status = 'POSTED'
           AND a.kode = '1.1.01.01'
       ),
@@ -142,10 +142,12 @@ export async function getUnitReportSummary(
       ),
       journal_summary AS (
         SELECT
-          COUNT(*)::int AS posted_journal_count
+          COUNT(DISTINCT jh.id)::int AS posted_journal_count
         FROM journal_header jh
+        JOIN journal_line jl
+          ON jl.journal_header_id = jh.id
         WHERE jh.bum_desa_id = $1::uuid
-          AND jh.unit_usaha_id = $2::uuid
+          AND jl.unit_usaha_id = $2::uuid
           AND jh.status = 'POSTED'
       )
       SELECT
@@ -207,10 +209,10 @@ export async function getUnitReportRecentJournals(
       FROM journal_header jh
       LEFT JOIN template_transaksi tt
         ON tt.id = jh.template_transaksi_id
-      LEFT JOIN journal_line jl
+      JOIN journal_line jl
         ON jl.journal_header_id = jh.id
+       AND jl.unit_usaha_id = $2::uuid
       WHERE jh.bum_desa_id = $1::uuid
-        AND jh.unit_usaha_id = $2::uuid
         AND jh.status = 'POSTED'
       GROUP BY
         jh.id,

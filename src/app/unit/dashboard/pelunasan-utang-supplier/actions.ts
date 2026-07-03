@@ -161,7 +161,7 @@ export async function createSupplierPaymentAction(formData: FormData) {
         JOIN akun a
           ON a.id = jl.akun_id
         WHERE jh.bum_desa_id = $1::uuid
-          AND jh.unit_usaha_id = $2::uuid
+          AND jl.unit_usaha_id = $2::uuid
           AND jh.status = 'POSTED'
           AND a.kode = $3
       `,
