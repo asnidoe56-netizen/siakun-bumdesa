@@ -56,6 +56,11 @@ const productionFinishedGoodsNavigation: UnitNavigationItem[] = [
     href: "/unit/dashboard/penjualan-produk",
     iconKey: "shoppingCart",
   },
+  {
+    label: "Laporan Unit",
+    href: "/unit/dashboard/laporan",
+    iconKey: "barChart",
+  },
 
 
 ];
