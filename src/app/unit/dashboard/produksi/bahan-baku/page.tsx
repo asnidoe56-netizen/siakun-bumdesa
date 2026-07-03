@@ -311,9 +311,9 @@ export default async function ProductionMaterialPage({
                     <Input
                       id="defaultUnitCost"
                       name="defaultUnitCost"
-                      type="number"
-                      min="0"
-                      step="1"
+                      type="text"
+                      inputMode="numeric"
+                      pattern="[0-9.,]*"
                       defaultValue="0"
                     />
                     <p className={materialPageStyles.helpText}>
