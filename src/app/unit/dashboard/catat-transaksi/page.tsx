@@ -16,6 +16,17 @@ import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
 
 export const dynamic = "force-dynamic";
 
+const centralOfficeTransactionGroups = [
+  {
+    title: "Terima Modal",
+    description: "Catat penerimaan modal dari desa, masyarakat, atau sumber modal lain yang sah.",
+    templateCode: "T19",
+    href: "/unit/dashboard/catat-transaksi/terima-modal",
+    icon: Banknote,
+    status: "Siap",
+  },
+];
+
 const defaultTransactionGroups = [
   {
     title: "Terima Pendapatan Tunai",
@@ -41,14 +52,6 @@ const defaultTransactionGroups = [
     icon: ReceiptText,
     status: "Berikutnya",
   },
-  {
-    title: "Terima Modal",
-    description: "Catat penerimaan modal dari desa atau masyarakat.",
-    templateCode: "T19",
-    href: null,
-    icon: Banknote,
-    status: "Berikutnya",
-  },
 ];
 
 const productionGeneralTransactionGroups = [
@@ -58,14 +61,6 @@ const productionGeneralTransactionGroups = [
     templateCode: "T02",
     href: null,
     icon: Landmark,
-    status: "Berikutnya",
-  },
-  {
-    title: "Terima Modal",
-    description: "Catat penerimaan modal dari desa atau masyarakat.",
-    templateCode: "T19",
-    href: null,
-    icon: Banknote,
     status: "Berikutnya",
   },
   {
@@ -116,25 +111,33 @@ const catatTransaksiStyles = {
 
 export default async function CatatTransaksiPage() {
   const context = await getUnitWorkContext();
+  const isCentralOffice = context.unitType === "kantor_pusat";
   const isProductionFinishedGoods =
+    context.unitType === "unit_usaha" &&
     context.businessCategoryCode === "PRODUKSI_BARANG_JADI";
 
-  const transactionGroups = isProductionFinishedGoods
-    ? productionGeneralTransactionGroups
-    : defaultTransactionGroups;
+  const transactionGroups = isCentralOffice
+    ? centralOfficeTransactionGroups
+    : isProductionFinishedGoods
+      ? productionGeneralTransactionGroups
+      : defaultTransactionGroups;
 
   return (
     <PageContainer>
       <PageHeader
         title={
-          isProductionFinishedGoods
-            ? "Transaksi Umum Non-Stok"
-            : "Catat Transaksi"
+          isCentralOffice
+            ? "Catat Transaksi Pusat"
+            : isProductionFinishedGoods
+              ? "Transaksi Umum Non-Stok"
+              : "Catat Transaksi"
         }
         description={
-          isProductionFinishedGoods
-            ? "Gunakan halaman ini hanya untuk transaksi umum yang tidak menyentuh stok produksi, barang jadi, atau HPP."
-            : "Pilih jenis transaksi dengan bahasa bisnis. Sistem akan membuat jurnal otomatis melalui Journal Engine."
+          isCentralOffice
+            ? "Gunakan halaman ini untuk transaksi tingkat BUMDes atau Kantor Pusat, seperti penerimaan modal."
+            : isProductionFinishedGoods
+              ? "Gunakan halaman ini hanya untuk transaksi umum yang tidak menyentuh stok produksi, barang jadi, atau HPP."
+              : "Pilih jenis transaksi dengan bahasa bisnis. Sistem akan membuat jurnal otomatis melalui Journal Engine."
         }
       />
 
@@ -162,13 +165,12 @@ export default async function CatatTransaksiPage() {
         ) : (
           <section className={catatTransaksiStyles.intro}>
             <h2 className={catatTransaksiStyles.introTitle}>
-              Transaksi Unit Usaha
+              {isCentralOffice ? "Transaksi Kantor Pusat" : "Transaksi Unit Usaha"}
             </h2>
             <p className={catatTransaksiStyles.introDescription}>
-              Operator cukup memilih jenis transaksi dan mengisi data usaha
-              seperti tanggal, nominal, kas/bank, serta keterangan. Debit dan
-              kredit tetap diproses oleh backend berdasarkan Template Transaksi
-              aktif.
+              {isCentralOffice
+                ? "Transaksi pusat dipakai untuk pencatatan yang menjadi kewenangan BUMDes, bukan transaksi operasional unit usaha."
+                : "Operator cukup memilih jenis transaksi dan mengisi data usaha seperti tanggal, nominal, kas/bank, serta keterangan. Debit dan kredit tetap diproses oleh backend berdasarkan Template Transaksi aktif."}
             </p>
           </section>
         )}

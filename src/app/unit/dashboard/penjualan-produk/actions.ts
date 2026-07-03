@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { postTemplateTransaction } from "@/lib/accounting/post-template-transaction";
 import { db } from "@/lib/db/pool";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { assertProductionFinishedGoodsContext } from "@/lib/unit/unit-context-guards";
 
 type ProductSaleRow = {
   product_id: string;
@@ -79,6 +80,8 @@ function toDecimalText(value: number, fractionDigits = 6) {
 
 export async function createFinishedGoodsSaleAction(formData: FormData) {
   const context = await getUnitWorkContext();
+
+  assertProductionFinishedGoodsContext(context, "Penjualan produk barang jadi");
 
   const productId = getRequiredString(formData.get("productId"), "Produk");
   const saleDate = getSaleDate(formData.get("saleDate"));

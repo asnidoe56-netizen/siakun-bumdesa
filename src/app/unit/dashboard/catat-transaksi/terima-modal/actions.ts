@@ -4,9 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { postTemplateTransaction } from "@/lib/accounting/post-template-transaction";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
-import { assertNonProductionOperationalUnitContext } from "@/lib/unit/unit-context-guards";
+import { assertCentralOfficeContext } from "@/lib/unit/unit-context-guards";
 
-const T01_TEMPLATE_CODE = "T01";
+const T19_TEMPLATE_CODE = "T19";
 
 function getRequiredString(formData: FormData, fieldName: string, label: string) {
   const value = String(formData.get(fieldName) ?? "").trim();
@@ -30,44 +30,46 @@ function getPositiveAmount(formData: FormData) {
   return amount;
 }
 
-export async function postCashIncomeAction(formData: FormData) {
+export async function postCapitalContributionAction(formData: FormData) {
   const context = await getUnitWorkContext();
-  assertNonProductionOperationalUnitContext(context, "Terima pendapatan tunai");
+
+  assertCentralOfficeContext(context, "Terima modal");
 
   const tanggal = getRequiredString(formData, "tanggal", "Tanggal transaksi");
   const nominal = getPositiveAmount(formData);
   const cashAccountCode = getRequiredString(
     formData,
     "cashAccountCode",
-    "Akun kas/bank"
+    "Kas/bank tujuan"
   );
-  const incomeAccountCode = getRequiredString(
+  const capitalAccountCode = getRequiredString(
     formData,
-    "incomeAccountCode",
-    "Akun pendapatan"
+    "capitalAccountCode",
+    "Akun modal"
   );
   const keterangan = String(formData.get("keterangan") ?? "").trim();
 
   const result = await postTemplateTransaction({
     bumDesaId: context.bumDesaId,
     unitUsahaId: context.unitUsahaId,
-    templateCode: T01_TEMPLATE_CODE,
+    templateCode: T19_TEMPLATE_CODE,
     tanggal,
     payload: {
       nominal,
-      cash_account_code: cashAccountCode,
-      income_account_code: incomeAccountCode,
+      cash_or_bank_account_code: cashAccountCode,
+      capital_account_code: capitalAccountCode,
       keterangan,
     },
     createdBy: context.userId,
-    keterangan: keterangan || "Terima pendapatan tunai",
+    keterangan: keterangan || "Terima modal dari desa atau masyarakat",
   });
 
   revalidatePath("/unit/dashboard");
   revalidatePath("/unit/dashboard/catat-transaksi");
+  revalidatePath("/unit/dashboard/laporan");
 
   redirect(
-    `/unit/dashboard/catat-transaksi/terima-pendapatan-tunai?posted=${encodeURIComponent(
+    `/unit/dashboard/catat-transaksi/terima-modal?posted=${encodeURIComponent(
       result.nomorJurnal
     )}`
   );

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db/pool";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { assertProductionFinishedGoodsContext } from "@/lib/unit/unit-context-guards";
 
 function getRequiredString(formData: FormData, fieldName: string, label: string) {
   const value = String(formData.get(fieldName) ?? "").trim();
@@ -75,6 +76,8 @@ type MaterialLookupRow = {
 
 export async function createMaterialStockInAction(formData: FormData) {
   const context = await getUnitWorkContext();
+
+  assertProductionFinishedGoodsContext(context, "Stok bahan produksi");
 
   const materialId = getRequiredString(formData, "materialId", "Bahan");
   const movementDate = getRequiredDate(formData, "movementDate", "Tanggal");

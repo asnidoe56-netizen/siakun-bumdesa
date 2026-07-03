@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db/pool";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { assertProductionFinishedGoodsContext } from "@/lib/unit/unit-context-guards";
 
 type FormulaRow = {
   formula_id: string;
@@ -110,6 +111,8 @@ function generateProductionCode(productionDate: string) {
 
 export async function createProductionBatchAction(formData: FormData) {
   const context = await getUnitWorkContext();
+
+  assertProductionFinishedGoodsContext(context, "Catat produksi barang jadi");
 
   const formulaId = getRequiredText(formData, "formulaId");
   const productionDate = normalizeDate(getRequiredText(formData, "productionDate"));

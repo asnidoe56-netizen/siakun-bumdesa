@@ -13,6 +13,7 @@ import {
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UnitContextBlocker } from "@/components/unit/unit-context-blocker";
 import { KpiCard } from "@/components/ui/kpi-card";
 import {
   getUnitReportRecentJournals,
@@ -170,6 +171,20 @@ function ReportShortcutCard({ shortcut }: { shortcut: ReportShortcut }) {
 
 export default async function UnitReportPage() {
   const context = await getUnitWorkContext();
+
+  if (
+    context.unitType !== "unit_usaha" ||
+    context.businessCategoryCode !== "PRODUKSI_BARANG_JADI"
+  ) {
+    return (
+      <UnitContextBlocker
+        context={context}
+        title="Laporan Unit Tidak Tersedia"
+        description="Laporan operasional unit ini hanya tersedia untuk unit usaha kategori Produksi Barang Jadi."
+        expectedContext="Unit Usaha kategori Produksi Barang Jadi"
+      />
+    );
+  }
 
   const [summary, recentJournals] = await Promise.all([
     getUnitReportSummary(context),

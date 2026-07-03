@@ -3,6 +3,7 @@ import { ArrowLeft, PackageCheck } from "lucide-react";
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UnitContextBlocker } from "@/components/unit/unit-context-blocker";
 import {
   getFinishedGoodsMovementList,
   getFinishedGoodsStockList,
@@ -86,6 +87,20 @@ function getMovementBadgeClass(direction: "IN" | "OUT") {
 
 export default async function FinishedGoodsStockPage() {
   const context = await getUnitWorkContext();
+
+  if (
+    context.unitType !== "unit_usaha" ||
+    context.businessCategoryCode !== "PRODUKSI_BARANG_JADI"
+  ) {
+    return (
+      <UnitContextBlocker
+        context={context}
+        title="Stok Barang Jadi Tidak Tersedia"
+        description="Stok produksi atau barang jadi hanya tersedia untuk unit usaha kategori Produksi Barang Jadi."
+        expectedContext="Unit Usaha kategori Produksi Barang Jadi"
+      />
+    );
+  }
 
   const [stocks, movements] = await Promise.all([
     getFinishedGoodsStockList(context),

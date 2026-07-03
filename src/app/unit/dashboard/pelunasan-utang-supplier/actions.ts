@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { postTemplateTransaction } from "@/lib/accounting/post-template-transaction";
 import { db } from "@/lib/db/pool";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { assertProductionFinishedGoodsContext } from "@/lib/unit/unit-context-guards";
 
 type SupplierPayableRow = {
   payable_id: string;
@@ -78,6 +79,8 @@ function toDecimalText(value: number) {
 
 export async function createSupplierPaymentAction(formData: FormData) {
   const context = await getUnitWorkContext();
+
+  assertProductionFinishedGoodsContext(context, "Pelunasan utang supplier");
 
   const payableId = getRequiredString(formData.get("payableId"), "Utang");
   const paymentDate = getPaymentDate(formData.get("paymentDate"));

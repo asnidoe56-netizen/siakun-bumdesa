@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UnitContextBlocker } from "@/components/unit/unit-context-blocker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
@@ -47,10 +48,23 @@ export default async function CashIncomePage({
   searchParams,
 }: CashIncomePageProps) {
   const params = await searchParams;
-  const [context, formOptions] = await Promise.all([
-    getUnitWorkContext(),
-    getCashIncomeFormOptions(),
-  ]);
+  const context = await getUnitWorkContext();
+
+  if (
+    context.unitType !== "unit_usaha" ||
+    context.businessCategoryCode === "PRODUKSI_BARANG_JADI"
+  ) {
+    return (
+      <UnitContextBlocker
+        context={context}
+        title="Terima Pendapatan Tunai Tidak Tersedia"
+        description="Penerimaan pendapatan tunai umum hanya tersedia untuk unit usaha non-produksi. Unit produksi barang jadi memakai alur Penjualan Produk agar stok dan HPP tetap akurat."
+        expectedContext="Unit Usaha non-produksi"
+      />
+    );
+  }
+
+  const formOptions = await getCashIncomeFormOptions();
   const postedNumber = params.posted;
 
   return (

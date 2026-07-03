@@ -27,6 +27,12 @@ import type {
 type UnitShellProps = {
   children: React.ReactNode;
   navItems: UnitNavigationItem[];
+  brandSubtitle: string;
+  brandShortLabel: string;
+  contextTitle: string;
+  contextDescription: string;
+  userName: string;
+  userEmail: string;
 };
 
 const iconByKey: Record<
@@ -98,7 +104,16 @@ function isActiveNavItem(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function UnitShell({ children, navItems }: UnitShellProps) {
+export function UnitShell({
+  children,
+  navItems,
+  brandSubtitle,
+  brandShortLabel,
+  contextTitle,
+  contextDescription,
+  userName,
+  userEmail,
+}: UnitShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [desktopCollapsed, setDesktopCollapsed] = React.useState(false);
@@ -124,8 +139,8 @@ export function UnitShell({ children, navItems }: UnitShellProps) {
           <SidebarBrand
             collapsed={desktopCollapsed}
             title="SiAkun BUM Desa"
-            subtitle="Unit Usaha"
-            shortLabel="UN"
+            subtitle={brandSubtitle}
+            shortLabel={brandShortLabel}
           />
 
           {!desktopCollapsed ? (
@@ -200,7 +215,7 @@ export function UnitShell({ children, navItems }: UnitShellProps) {
 
           <aside className={unitShellStyles.mobileSidebar}>
             <div className={unitShellStyles.mobileHeader}>
-              <SidebarBrand title="SiAkun BUM Desa" subtitle="Unit Usaha" />
+              <SidebarBrand title="SiAkun BUM Desa" subtitle={brandSubtitle} />
 
               <Button
                 variant="ghost"
@@ -260,15 +275,15 @@ export function UnitShell({ children, navItems }: UnitShellProps) {
             </Button>
 
             <div>
-              <p className={unitShellStyles.topbar.contextTitle}>Unit Usaha</p>
+              <p className={unitShellStyles.topbar.contextTitle}>{contextTitle}</p>
               <p className={unitShellStyles.topbar.contextDescription}>
-                Catat transaksi dan pantau pembukuan unit
+                {contextDescription}
               </p>
             </div>
           </div>
 
           <div className={unitShellStyles.topbar.right}>
-            <TopbarUser name="Operator Unit" email="operator@siakun.local" />
+            <TopbarUser name={userName} email={userEmail} />
           </div>
         </header>
 

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db/pool";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { assertProductionFinishedGoodsContext } from "@/lib/unit/unit-context-guards";
 
 const allowedMaterialTypes = new Set([
   "BAHAN_BAKU",
@@ -50,6 +51,8 @@ function getNonNegativeAmount(formData: FormData, fieldName: string, label: stri
 
 export async function createProductionMaterialAction(formData: FormData) {
   const context = await getUnitWorkContext();
+
+  assertProductionFinishedGoodsContext(context, "Data bahan produksi");
 
   const rawCode = getRequiredString(formData, "code", "Kode bahan");
   const code = normalizeMaterialCode(rawCode);

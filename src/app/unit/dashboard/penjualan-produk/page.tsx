@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UnitContextBlocker } from "@/components/unit/unit-context-blocker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -133,6 +134,20 @@ export default async function FinishedGoodsSalePage({
   const params = await searchParams;
   const context = await getUnitWorkContext();
 
+  if (
+    context.unitType !== "unit_usaha" ||
+    context.businessCategoryCode !== "PRODUKSI_BARANG_JADI"
+  ) {
+    return (
+      <UnitContextBlocker
+        context={context}
+        title="Penjualan Produk Tidak Tersedia"
+        description="Penjualan barang jadi hanya tersedia untuk unit usaha kategori Produksi Barang Jadi."
+        expectedContext="Unit Usaha kategori Produksi Barang Jadi"
+      />
+    );
+  }
+
   const [products, sales] = await Promise.all([
     getFinishedGoodsSaleProductOptions(context),
     getFinishedGoodsSaleHistoryList(context),
@@ -254,10 +269,10 @@ export default async function FinishedGoodsSalePage({
               {primarySellableProduct ? (
                 <>
                   Stok {formatDecimal(primarySellableProduct.quantityOnHand)}{" "}
-                  {primarySellableProduct.unitOfMeasure} •{" "}
+                  {primarySellableProduct.unitOfMeasure} â€¢{" "}
                   {formatCurrency(primarySellableProduct.defaultSellingPrice)}
                   {otherSellableProductCount > 0
-                    ? ` • +${otherSellableProductCount} produk lain`
+                    ? ` â€¢ +${otherSellableProductCount} produk lain`
                     : ""}
                 </>
               ) : (
@@ -290,7 +305,7 @@ export default async function FinishedGoodsSalePage({
                             {product.productName}
                           </CardTitle>
                           <p className={salePageStyles.productDescription}>
-                            Kode: {product.productCode} • Satuan:{" "}
+                            Kode: {product.productCode} â€¢ Satuan:{" "}
                             {product.unitOfMeasure}
                           </p>
                         </div>

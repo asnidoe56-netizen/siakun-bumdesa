@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { UnitContextBlocker } from "@/components/unit/unit-context-blocker";
+import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
 import {
   ArrowRight,
   Boxes,
@@ -93,7 +95,23 @@ const productionCards = [
   },
 ];
 
-export default function ProductionPage() {
+export default async function ProductionPage() {
+  const context = await getUnitWorkContext();
+
+  if (
+    context.unitType !== "unit_usaha" ||
+    context.businessCategoryCode !== "PRODUKSI_BARANG_JADI"
+  ) {
+    return (
+      <UnitContextBlocker
+        context={context}
+        title="Produksi Tidak Tersedia"
+        description="Menu produksi hanya tersedia untuk unit usaha kategori Produksi Barang Jadi."
+        expectedContext="Unit Usaha kategori Produksi Barang Jadi"
+      />
+    );
+  }
+
   return (
     <main className={productionPageStyles.page}>
       <div className={productionPageStyles.header}>

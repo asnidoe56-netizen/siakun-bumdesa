@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db/pool";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { assertProductionFinishedGoodsContext } from "@/lib/unit/unit-context-guards";
 
 const FORMULA_LINE_SLOTS = 5;
 
@@ -106,6 +107,8 @@ function getFormulaLines(formData: FormData) {
 
 export async function createProductionFormulaAction(formData: FormData) {
   const context = await getUnitWorkContext();
+
+  assertProductionFinishedGoodsContext(context, "Formula produksi barang jadi");
 
   const productId = getRequiredText(formData, "productId");
   const code = normalizeCode(getRequiredText(formData, "code"));

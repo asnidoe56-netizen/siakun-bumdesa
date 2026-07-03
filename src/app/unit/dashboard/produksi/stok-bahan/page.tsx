@@ -3,6 +3,7 @@ import { ArrowLeft, Boxes, PlusCircle } from "lucide-react";
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UnitContextBlocker } from "@/components/unit/unit-context-blocker";
 import { getProductionMaterialTypeLabel } from "@/lib/unit/get-production-material-data";
 import {
   getMaterialMovementList,
@@ -136,6 +137,20 @@ function getMovementSourceLabel(source: string) {
 
 export default async function MaterialStockPage() {
   const context = await getUnitWorkContext();
+
+  if (
+    context.unitType !== "unit_usaha" ||
+    context.businessCategoryCode !== "PRODUKSI_BARANG_JADI"
+  ) {
+    return (
+      <UnitContextBlocker
+        context={context}
+        title="Stok Bahan Tidak Tersedia"
+        description="Stok bahan dan komponen produksi hanya tersedia untuk unit usaha kategori Produksi Barang Jadi."
+        expectedContext="Unit Usaha kategori Produksi Barang Jadi"
+      />
+    );
+  }
 
   const [stocks, movements] = await Promise.all([
     getMaterialStockList(context),

@@ -8,6 +8,23 @@ export const dynamic = "force-dynamic";
 export default async function UnitLayout({ children }: { children: ReactNode }) {
   const context = await getUnitWorkContext();
   const navItems = getUnitNavigation(context.businessCategoryCode);
+  const isCentralOffice = context.unitType === "kantor_pusat";
 
-  return <UnitShell navItems={navItems}>{children}</UnitShell>;
+  return (
+    <UnitShell
+      navItems={navItems}
+      brandSubtitle={isCentralOffice ? "Kantor Pusat" : "Unit Usaha"}
+      brandShortLabel={isCentralOffice ? "PU" : "UN"}
+      contextTitle={isCentralOffice ? "Kantor Pusat" : "Unit Usaha"}
+      contextDescription={`${context.bumDesaName} • ${context.unitUsahaName}`}
+      userName={context.userName}
+      userEmail={
+        context.isDevelopmentFallback
+          ? "development@siakun.local"
+          : "operator@siakun.local"
+      }
+    >
+      {children}
+    </UnitShell>
+  );
 }

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db/pool";
 import { getUnitWorkContext } from "@/lib/unit/get-unit-work-context";
+import { assertProductionFinishedGoodsContext } from "@/lib/unit/unit-context-guards";
 
 function getRequiredString(formData: FormData, fieldName: string, label: string) {
   const value = String(formData.get(fieldName) ?? "").trim();
@@ -43,6 +44,8 @@ function getNonNegativeAmount(formData: FormData, fieldName: string, label: stri
 
 export async function createProductionProductAction(formData: FormData) {
   const context = await getUnitWorkContext();
+
+  assertProductionFinishedGoodsContext(context, "Data produk barang jadi");
 
   const rawCode = getRequiredString(formData, "code", "Kode produk");
   const code = normalizeProductCode(rawCode);

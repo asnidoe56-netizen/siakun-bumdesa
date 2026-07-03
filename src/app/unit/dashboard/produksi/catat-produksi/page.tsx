@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UnitContextBlocker } from "@/components/unit/unit-context-blocker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -111,6 +112,20 @@ export default async function ProductionRecordingPage({
   const params = await searchParams;
   const context = await getUnitWorkContext();
 
+  if (
+    context.unitType !== "unit_usaha" ||
+    context.businessCategoryCode !== "PRODUKSI_BARANG_JADI"
+  ) {
+    return (
+      <UnitContextBlocker
+        context={context}
+        title="Catat Produksi Tidak Tersedia"
+        description="Pencatatan produksi hanya tersedia untuk unit usaha kategori Produksi Barang Jadi."
+        expectedContext="Unit Usaha kategori Produksi Barang Jadi"
+      />
+    );
+  }
+
   const isCreateMode = params.mode === "create";
   const createdBatch = params.created;
   const today = getTodayInputValue();
@@ -189,7 +204,7 @@ export default async function ProductionRecordingPage({
                         {formula.name}
                       </CardTitle>
                       <p className={recordingPageStyles.formulaDescription}>
-                        Produk: {formula.productName} • Standar output:{" "}
+                        Produk: {formula.productName} â€¢ Standar output:{" "}
                         {formatDecimal(formula.outputQuantity)}{" "}
                         {formula.productUnitOfMeasure}
                       </p>
@@ -326,9 +341,9 @@ export default async function ProductionRecordingPage({
                               {line.materialName}
                             </p>
                             <p className={recordingPageStyles.lineMeta}>
-                              {getProductionMaterialTypeLabel(line.materialType)} •
+                              {getProductionMaterialTypeLabel(line.materialType)} â€¢
                               Standar resep: {formatDecimal(line.formulaQuantity)}{" "}
-                              {line.unitOfMeasure} • Harga default:{" "}
+                              {line.unitOfMeasure} â€¢ Harga default:{" "}
                               {formatCurrency(line.unitCost)}
                             </p>
 
