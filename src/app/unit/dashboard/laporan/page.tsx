@@ -7,6 +7,7 @@ import {
   Boxes,
   Package,
   ReceiptText,
+  Scale,
   ShoppingCart,
   Truck,
 } from "lucide-react";
@@ -66,6 +67,12 @@ const reportShortcuts: ReportShortcut[] = [
     description: "Lihat mutasi debit, kredit, saldo awal, dan saldo berjalan per akun.",
     href: "/unit/dashboard/laporan/buku-besar",
     icon: BookOpen,
+  },
+  {
+    title: "Neraca Saldo",
+    description: "Cek keseimbangan total debit dan kredit seluruh akun detail.",
+    href: "/unit/dashboard/laporan/neraca-saldo",
+    icon: Scale,
   },
 ];
 

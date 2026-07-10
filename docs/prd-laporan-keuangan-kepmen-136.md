@@ -1,0 +1,463 @@
+﻿# PRD Modul Laporan Keuangan SiAkun BUM Desa
+
+## Status Dokumen
+
+- Project: SiAkun BUM Desa
+- Modul: Laporan Keuangan Unit Usaha
+- Acuan utama: Kepmendesa 136 Tahun 2022
+- Status: Aktif
+- Tujuan: Menjadi panduan kerja dan checklist progres implementasi laporan.
+
+---
+
+## 1. Prinsip Utama
+
+Laporan formal harus bersumber dari jurnal yang sudah diposting, bukan langsung dari tabel transaksi operasional.
+
+Alur data:
+
+Transaksi operasional
+→ Jurnal otomatis / manual
+→ journal_header + journal_line
+→ Buku Besar
+→ Neraca Saldo
+→ Laporan formal
+
+Sumber data utama:
+
+- journal_header
+- journal_line
+- akun
+- periode_akuntansi
+
+Aturan laporan:
+
+- Hanya membaca jurnal dengan status POSTED.
+- Hanya memakai akun aktif.
+- Untuk laporan formal, akun yang dipakai adalah akun detail.
+- Saldo akun mengikuti normal_balance.
+
+Aturan saldo:
+
+- Akun normal DEBIT: debit - kredit
+- Akun normal KREDIT: kredit - debit
+
+---
+
+## 2. Route Modul Laporan
+
+Route utama:
+
+- /unit/dashboard/laporan
+
+Sub-route laporan:
+
+- /unit/dashboard/laporan/buku-besar
+- /unit/dashboard/laporan/neraca-saldo
+- /unit/dashboard/laporan/laba-rugi
+- /unit/dashboard/laporan/neraca
+- /unit/dashboard/laporan/perubahan-ekuitas
+- /unit/dashboard/laporan/arus-kas
+- /unit/dashboard/laporan/calk
+
+---
+
+## 3. Checklist Utama Modul Laporan
+
+- [x] Buku Besar tahap awal
+- [x] Neraca Saldo
+- [ ] Laporan Laba Rugi
+- [ ] Neraca / Laporan Posisi Keuangan
+- [ ] Laporan Perubahan Ekuitas
+- [ ] Laporan Arus Kas
+- [ ] Catatan atas Laporan Keuangan / CaLK
+- [ ] Export PDF
+- [ ] Export Excel
+
+---
+
+## 4. Buku Besar
+
+Status: Selesai tahap awal.
+
+Checklist:
+
+- [x] Helper data Buku Besar dibuat
+- [x] Halaman Buku Besar dibuat
+- [x] Route /unit/dashboard/laporan/buku-besar aktif
+- [x] Filter periode tersedia
+- [x] Filter tanggal awal tersedia
+- [x] Filter tanggal akhir tersedia
+- [x] Filter akun tersedia
+- [x] Saldo awal tampil
+- [x] Total debit tampil
+- [x] Total kredit tampil
+- [x] Saldo akhir tampil
+- [x] Mutasi jurnal posted tampil
+- [x] Saldo berjalan tampil
+- [x] Shortcut dari halaman Laporan Unit tersedia
+- [x] npm run lint berhasil
+- [x] npm run build berhasil
+- [x] Commit berhasil
+- [x] Push GitHub berhasil
+
+File:
+
+- src/lib/unit/get-general-ledger-report-data.ts
+- src/app/unit/dashboard/laporan/buku-besar/page.tsx
+
+Catatan lanjutan:
+
+- [ ] Export Buku Besar PDF
+- [ ] Export Buku Besar Excel
+- [ ] Print layout Buku Besar
+- [ ] Filter nomor jurnal
+- [ ] Opsi tampilkan akun tanpa mutasi
+
+---
+
+## 5. Neraca Saldo
+
+Status: Selesai tahap awal.
+
+Tujuan:
+
+Neraca Saldo menjadi kontrol keseimbangan debit dan kredit sebelum laporan Laba Rugi, Neraca, Perubahan Ekuitas, dan Arus Kas dibuat.
+
+File target:
+
+- src/lib/unit/get-trial-balance-report-data.ts
+- src/app/unit/dashboard/laporan/neraca-saldo/page.tsx
+
+Checklist:
+
+- [x] Helper data Neraca Saldo dibuat
+- [x] Halaman Neraca Saldo dibuat
+- [x] Route /unit/dashboard/laporan/neraca-saldo aktif
+- [x] Shortcut di halaman Laporan Unit ditambahkan
+- [x] Filter periode tersedia
+- [x] Filter tanggal akhir tersedia
+- [x] Semua akun detail aktif tampil
+- [x] Akun tanpa transaksi tetap tampil dengan saldo 0
+- [x] Saldo debit dihitung otomatis
+- [x] Saldo kredit dihitung otomatis
+- [x] Total debit tampil
+- [x] Total kredit tampil
+- [x] Status Balance / Tidak Balance tampil
+- [x] npm run lint berhasil
+- [x] npm run build berhasil
+- [ ] Commit berhasil
+- [ ] Push GitHub berhasil
+
+Acceptance criteria:
+
+- [x] Hanya mengambil jurnal POSTED
+- [x] Memakai akun detail aktif
+- [x] Total debit dan total kredit dihitung otomatis
+- [x] Sistem menampilkan Balance jika total debit sama dengan total kredit
+- [x] Sistem menampilkan peringatan jika tidak balance
+
+---
+
+## 6. Laporan Laba Rugi
+
+Status: Belum dibuat.
+
+File target:
+
+- src/lib/unit/get-income-statement-report-data.ts
+- src/app/unit/dashboard/laporan/laba-rugi/page.tsx
+
+Struktur awal:
+
+- Pendapatan Usaha
+- Harga Pokok Penjualan / Beban Pokok
+- Laba Kotor
+- Beban Usaha
+- Laba Operasi
+- Pendapatan dan Beban Lain-lain
+- Laba/Rugi Bersih
+
+Checklist:
+
+- [ ] Helper data Laba Rugi dibuat
+- [ ] Halaman Laba Rugi dibuat
+- [ ] Route /unit/dashboard/laporan/laba-rugi aktif
+- [ ] Shortcut di halaman Laporan Unit ditambahkan
+- [ ] Filter periode tersedia
+- [ ] Pendapatan usaha tampil
+- [ ] HPP / beban pokok tampil
+- [ ] Laba kotor tampil
+- [ ] Beban usaha tampil
+- [ ] Laba operasi tampil
+- [ ] Laba/rugi bersih tampil
+- [ ] npm run lint berhasil
+- [ ] npm run build berhasil
+- [ ] Commit berhasil
+- [ ] Push GitHub berhasil
+
+Acceptance criteria:
+
+- [ ] Hanya mengambil jurnal POSTED
+- [ ] Mengambil akun pendapatan dan beban
+- [ ] Laba/rugi bersih bisa dipakai oleh Laporan Perubahan Ekuitas
+
+---
+
+## 7. Neraca / Laporan Posisi Keuangan
+
+Status: Belum dibuat.
+
+File target:
+
+- src/lib/unit/get-balance-sheet-report-data.ts
+- src/app/unit/dashboard/laporan/neraca/page.tsx
+
+Formula kontrol:
+
+Aset = Kewajiban + Ekuitas
+
+Checklist:
+
+- [ ] Helper data Neraca dibuat
+- [ ] Halaman Neraca dibuat
+- [ ] Route /unit/dashboard/laporan/neraca aktif
+- [ ] Shortcut di halaman Laporan Unit ditambahkan
+- [ ] Filter periode tersedia
+- [ ] Aset tampil
+- [ ] Kewajiban tampil
+- [ ] Ekuitas tampil
+- [ ] Total aset tampil
+- [ ] Total kewajiban tampil
+- [ ] Total ekuitas tampil
+- [ ] Status seimbang / tidak seimbang tampil
+- [ ] npm run lint berhasil
+- [ ] npm run build berhasil
+- [ ] Commit berhasil
+- [ ] Push GitHub berhasil
+
+Acceptance criteria:
+
+- [ ] Akun 1.x masuk Aset
+- [ ] Akun 2.x masuk Kewajiban
+- [ ] Akun 3.x masuk Ekuitas
+- [ ] Nilai ekuitas konsisten dengan Laporan Perubahan Ekuitas
+
+---
+
+## 8. Laporan Perubahan Ekuitas
+
+Status: Belum dibuat.
+
+File target:
+
+- src/lib/unit/get-equity-changes-report-data.ts
+- src/app/unit/dashboard/laporan/perubahan-ekuitas/page.tsx
+
+Struktur awal:
+
+- Ekuitas Awal
+- Penyertaan Modal
+- Tambahan Modal / Hibah
+- Laba Bersih Periode Berjalan
+- Distribusi / Pembagian Hasil Usaha
+- Koreksi Ekuitas
+- Ekuitas Akhir
+
+Checklist:
+
+- [ ] Helper data Perubahan Ekuitas dibuat
+- [ ] Halaman Perubahan Ekuitas dibuat
+- [ ] Route /unit/dashboard/laporan/perubahan-ekuitas aktif
+- [ ] Shortcut di halaman Laporan Unit ditambahkan
+- [ ] Filter periode tersedia
+- [ ] Ekuitas awal tampil
+- [ ] Penambahan modal tampil
+- [ ] Laba/rugi bersih periode berjalan tampil
+- [ ] Distribusi / pembagian hasil usaha tampil
+- [ ] Koreksi ekuitas tampil
+- [ ] Ekuitas akhir tampil
+- [ ] npm run lint berhasil
+- [ ] npm run build berhasil
+- [ ] Commit berhasil
+- [ ] Push GitHub berhasil
+
+Acceptance criteria:
+
+- [ ] Laba/rugi bersih tersambung dari Laporan Laba Rugi
+- [ ] Ekuitas akhir sama dengan nilai ekuitas di Neraca
+
+---
+
+## 9. Laporan Arus Kas
+
+Status: Belum dibuat.
+
+File target:
+
+- src/lib/unit/get-cash-flow-report-data.ts
+- src/app/unit/dashboard/laporan/arus-kas/page.tsx
+
+Struktur awal:
+
+- Arus Kas dari Aktivitas Operasi
+- Arus Kas dari Aktivitas Investasi
+- Arus Kas dari Aktivitas Pendanaan
+- Kenaikan / Penurunan Kas Bersih
+- Kas dan Setara Kas Awal
+- Kas dan Setara Kas Akhir
+
+Sumber akun kas:
+
+- 1.1.01.xx Kas dan Bank
+- 1.1.02.xx Setara Kas
+
+Checklist:
+
+- [ ] Helper data Arus Kas dibuat
+- [ ] Halaman Arus Kas dibuat
+- [ ] Route /unit/dashboard/laporan/arus-kas aktif
+- [ ] Shortcut di halaman Laporan Unit ditambahkan
+- [ ] Filter periode tersedia
+- [ ] Arus kas operasi tampil
+- [ ] Arus kas investasi tampil
+- [ ] Arus kas pendanaan tampil
+- [ ] Kenaikan / penurunan kas bersih tampil
+- [ ] Kas awal tampil
+- [ ] Kas akhir tampil
+- [ ] npm run lint berhasil
+- [ ] npm run build berhasil
+- [ ] Commit berhasil
+- [ ] Push GitHub berhasil
+
+Acceptance criteria:
+
+- [ ] Tidak hanya membaca Kas Tunai 1.1.01.01
+- [ ] Membaca seluruh akun kas, bank, dan setara kas aktif
+- [ ] Saldo kas akhir sama dengan kas dan setara kas di Neraca
+- [ ] Arus kas memakai metode langsung
+
+---
+
+## 10. Catatan atas Laporan Keuangan / CaLK
+
+Status: Belum dibuat.
+
+File target:
+
+- src/lib/unit/get-financial-statement-notes-data.ts
+- src/app/unit/dashboard/laporan/calk/page.tsx
+
+Checklist:
+
+- [ ] Helper data CaLK dibuat
+- [ ] Halaman CaLK dibuat
+- [ ] Route /unit/dashboard/laporan/calk aktif
+- [ ] Shortcut di halaman Laporan Unit ditambahkan
+- [ ] Identitas BUMDes tampil
+- [ ] Identitas unit usaha tampil
+- [ ] Periode laporan tampil
+- [ ] Basis penyusunan laporan tampil
+- [ ] Ringkasan kebijakan akuntansi tampil
+- [ ] Rincian kas dan bank tampil
+- [ ] Rincian piutang tampil
+- [ ] Rincian persediaan tampil
+- [ ] Rincian aset tetap tampil
+- [ ] Rincian utang tampil
+- [ ] Rincian ekuitas tampil
+- [ ] Rincian pendapatan dan beban tampil
+- [ ] npm run lint berhasil
+- [ ] npm run build berhasil
+- [ ] Commit berhasil
+- [ ] Push GitHub berhasil
+
+---
+
+## 11. Export PDF dan Excel
+
+Status: Belum dibuat.
+
+Checklist:
+
+- [ ] Desain print layout dibuat
+- [ ] Export Buku Besar PDF
+- [ ] Export Buku Besar Excel
+- [ ] Export Neraca Saldo PDF
+- [ ] Export Neraca Saldo Excel
+- [ ] Export Laba Rugi PDF
+- [ ] Export Laba Rugi Excel
+- [ ] Export Neraca PDF
+- [ ] Export Neraca Excel
+- [ ] Export Perubahan Ekuitas PDF
+- [ ] Export Perubahan Ekuitas Excel
+- [ ] Export Arus Kas PDF
+- [ ] Export Arus Kas Excel
+- [ ] Export CaLK PDF
+- [ ] Export CaLK Excel
+
+Catatan:
+
+Export dibuat setelah struktur laporan stabil.
+
+---
+
+## 12. UI Standard Modul Laporan
+
+Setiap halaman laporan harus memiliki:
+
+- [ ] Tombol kembali ke Pusat Laporan
+- [ ] PageHeader
+- [ ] Filter periode / tanggal
+- [ ] Kartu ringkasan
+- [ ] Tabel laporan utama
+- [ ] Empty state jika data belum ada
+- [ ] Status validasi laporan
+- [ ] Tombol export jika sudah tersedia
+
+Komponen prioritas:
+
+- PageContainer
+- PageHeader
+- Card
+- KpiCard
+- Button
+- Input
+- Label
+- Table pattern
+- Empty state
+
+---
+
+## 13. Definition of Done Per Laporan
+
+Satu laporan dianggap selesai jika:
+
+- [ ] Helper data dibuat
+- [ ] Halaman route dibuat
+- [ ] Shortcut halaman Laporan Unit ditambahkan
+- [ ] Filter periode berfungsi
+- [ ] Data hanya memakai jurnal POSTED
+- [ ] Empty state tersedia
+- [ ] Validasi angka tersedia
+- [ ] npm run lint berhasil
+- [ ] npm run build berhasil
+- [ ] git diff --check bersih
+- [ ] Commit dibuat
+- [ ] Push ke GitHub berhasil
+
+---
+
+## 14. Urutan Resmi Pengerjaan
+
+- [x] Buku Besar
+- [x] Neraca Saldo
+- [ ] Laporan Laba Rugi
+- [ ] Neraca / Laporan Posisi Keuangan
+- [ ] Laporan Perubahan Ekuitas
+- [ ] Laporan Arus Kas
+- [ ] CaLK
+- [ ] Export PDF / Excel
+
+Catatan penting:
+
+Neraca Saldo tahap awal sudah selesai dan balance. Lanjut berikutnya ke Laporan Laba Rugi.
