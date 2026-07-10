@@ -193,8 +193,8 @@ Checklist:
 - [x] Laba/rugi bersih tampil
 - [x] npm run lint berhasil
 - [x] npm run build berhasil
-- [ ] Commit berhasil
-- [ ] Push GitHub berhasil
+- [x] Commit berhasil
+- [x] Push GitHub berhasil
 
 Acceptance criteria:
 
