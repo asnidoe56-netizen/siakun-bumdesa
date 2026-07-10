@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
@@ -62,9 +62,9 @@ const reportShortcuts: ReportShortcut[] = [
     icon: ShoppingCart,
   },
   {
-    title: "Jurnal Transaksi",
-    description: "Tinjau jurnal otomatis yang sudah diposting sistem.",
-    href: "/unit/dashboard/laporan",
+    title: "Buku Besar",
+    description: "Lihat mutasi debit, kredit, saldo awal, dan saldo berjalan per akun.",
+    href: "/unit/dashboard/laporan/buku-besar",
     icon: BookOpen,
   },
 ];
