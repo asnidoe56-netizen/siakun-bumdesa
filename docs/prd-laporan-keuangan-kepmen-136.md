@@ -66,7 +66,7 @@ Sub-route laporan:
 
 - [x] Buku Besar tahap awal
 - [x] Neraca Saldo
-- [ ] Laporan Laba Rugi
+- [x] Laporan Laba Rugi
 - [ ] Neraca / Laporan Posisi Keuangan
 - [ ] Laporan Perubahan Ekuitas
 - [ ] Laporan Arus Kas
@@ -161,7 +161,7 @@ Acceptance criteria:
 
 ## 6. Laporan Laba Rugi
 
-Status: Belum dibuat.
+Status: Selesai tahap awal.
 
 File target:
 
@@ -180,27 +180,27 @@ Struktur awal:
 
 Checklist:
 
-- [ ] Helper data Laba Rugi dibuat
-- [ ] Halaman Laba Rugi dibuat
-- [ ] Route /unit/dashboard/laporan/laba-rugi aktif
-- [ ] Shortcut di halaman Laporan Unit ditambahkan
-- [ ] Filter periode tersedia
-- [ ] Pendapatan usaha tampil
-- [ ] HPP / beban pokok tampil
-- [ ] Laba kotor tampil
-- [ ] Beban usaha tampil
-- [ ] Laba operasi tampil
-- [ ] Laba/rugi bersih tampil
-- [ ] npm run lint berhasil
-- [ ] npm run build berhasil
+- [x] Helper data Laba Rugi dibuat
+- [x] Halaman Laba Rugi dibuat
+- [x] Route /unit/dashboard/laporan/laba-rugi aktif
+- [x] Shortcut di halaman Laporan Unit ditambahkan
+- [x] Filter periode tersedia
+- [x] Pendapatan usaha tampil
+- [x] HPP / beban pokok tampil
+- [x] Laba kotor tampil
+- [x] Beban usaha tampil
+- [x] Laba operasi tampil
+- [x] Laba/rugi bersih tampil
+- [x] npm run lint berhasil
+- [x] npm run build berhasil
 - [ ] Commit berhasil
 - [ ] Push GitHub berhasil
 
 Acceptance criteria:
 
-- [ ] Hanya mengambil jurnal POSTED
-- [ ] Mengambil akun pendapatan dan beban
-- [ ] Laba/rugi bersih bisa dipakai oleh Laporan Perubahan Ekuitas
+- [x] Hanya mengambil jurnal POSTED
+- [x] Mengambil akun pendapatan dan beban
+- [x] Laba/rugi bersih bisa dipakai oleh Laporan Perubahan Ekuitas
 
 ---
 
@@ -451,7 +451,7 @@ Satu laporan dianggap selesai jika:
 
 - [x] Buku Besar
 - [x] Neraca Saldo
-- [ ] Laporan Laba Rugi
+- [x] Laporan Laba Rugi
 - [ ] Neraca / Laporan Posisi Keuangan
 - [ ] Laporan Perubahan Ekuitas
 - [ ] Laporan Arus Kas
@@ -460,4 +460,4 @@ Satu laporan dianggap selesai jika:
 
 Catatan penting:
 
-Neraca Saldo tahap awal sudah selesai dan balance. Lanjut berikutnya ke Laporan Laba Rugi.
+Laporan Laba Rugi tahap awal sudah selesai. Lanjut berikutnya ke Neraca / Laporan Posisi Keuangan.

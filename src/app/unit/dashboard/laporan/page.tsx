@@ -10,6 +10,7 @@ import {
   Scale,
   ShoppingCart,
   Truck,
+  TrendingUp,
 } from "lucide-react";
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
@@ -73,6 +74,12 @@ const reportShortcuts: ReportShortcut[] = [
     description: "Cek keseimbangan total debit dan kredit seluruh akun detail.",
     href: "/unit/dashboard/laporan/neraca-saldo",
     icon: Scale,
+  },
+  {
+    title: "Laba Rugi",
+    description: "Lihat pendapatan, HPP, beban usaha, dan laba/rugi bersih periode berjalan.",
+    href: "/unit/dashboard/laporan/laba-rugi",
+    icon: TrendingUp,
   },
 ];
 
