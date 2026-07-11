@@ -67,7 +67,7 @@ Sub-route laporan:
 - [x] Buku Besar tahap awal
 - [x] Neraca Saldo
 - [x] Laporan Laba Rugi
-- [ ] Neraca / Laporan Posisi Keuangan
+- [x] Neraca / Laporan Posisi Keuangan
 - [ ] Laporan Perubahan Ekuitas
 - [ ] Laporan Arus Kas
 - [ ] Catatan atas Laporan Keuangan / CaLK
@@ -206,7 +206,7 @@ Acceptance criteria:
 
 ## 7. Neraca / Laporan Posisi Keuangan
 
-Status: Belum dibuat.
+Status: Selesai tahap awal.
 
 File target:
 
@@ -219,28 +219,28 @@ Aset = Kewajiban + Ekuitas
 
 Checklist:
 
-- [ ] Helper data Neraca dibuat
-- [ ] Halaman Neraca dibuat
-- [ ] Route /unit/dashboard/laporan/neraca aktif
-- [ ] Shortcut di halaman Laporan Unit ditambahkan
-- [ ] Filter periode tersedia
-- [ ] Aset tampil
-- [ ] Kewajiban tampil
-- [ ] Ekuitas tampil
-- [ ] Total aset tampil
-- [ ] Total kewajiban tampil
-- [ ] Total ekuitas tampil
-- [ ] Status seimbang / tidak seimbang tampil
-- [ ] npm run lint berhasil
-- [ ] npm run build berhasil
+- [x] Helper data Neraca dibuat
+- [x] Halaman Neraca dibuat
+- [x] Route /unit/dashboard/laporan/neraca aktif
+- [x] Shortcut di halaman Laporan Unit ditambahkan
+- [x] Filter periode tersedia
+- [x] Aset tampil
+- [x] Kewajiban tampil
+- [x] Ekuitas tampil
+- [x] Total aset tampil
+- [x] Total kewajiban tampil
+- [x] Total ekuitas tampil
+- [x] Status seimbang / tidak seimbang tampil
+- [x] npm run lint berhasil
+- [x] npm run build berhasil
 - [ ] Commit berhasil
 - [ ] Push GitHub berhasil
 
 Acceptance criteria:
 
-- [ ] Akun 1.x masuk Aset
-- [ ] Akun 2.x masuk Kewajiban
-- [ ] Akun 3.x masuk Ekuitas
+- [x] Akun 1.x masuk Aset
+- [x] Akun 2.x masuk Kewajiban
+- [x] Akun 3.x masuk Ekuitas
 - [ ] Nilai ekuitas konsisten dengan Laporan Perubahan Ekuitas
 
 ---
@@ -452,7 +452,7 @@ Satu laporan dianggap selesai jika:
 - [x] Buku Besar
 - [x] Neraca Saldo
 - [x] Laporan Laba Rugi
-- [ ] Neraca / Laporan Posisi Keuangan
+- [x] Neraca / Laporan Posisi Keuangan
 - [ ] Laporan Perubahan Ekuitas
 - [ ] Laporan Arus Kas
 - [ ] CaLK
@@ -460,4 +460,4 @@ Satu laporan dianggap selesai jika:
 
 Catatan penting:
 
-Laporan Laba Rugi tahap awal sudah selesai. Lanjut berikutnya ke Neraca / Laporan Posisi Keuangan.
+Neraca / Laporan Posisi Keuangan tahap awal sudah selesai. Lanjut berikutnya ke Laporan Perubahan Ekuitas.

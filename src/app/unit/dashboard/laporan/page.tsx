@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   Truck,
   TrendingUp,
+  Landmark,
 } from "lucide-react";
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
@@ -80,6 +81,12 @@ const reportShortcuts: ReportShortcut[] = [
     description: "Lihat pendapatan, HPP, beban usaha, dan laba/rugi bersih periode berjalan.",
     href: "/unit/dashboard/laporan/laba-rugi",
     icon: TrendingUp,
+  },
+  {
+    title: "Neraca",
+    description: "Lihat posisi aset, kewajiban, ekuitas, dan keseimbangan laporan.",
+    href: "/unit/dashboard/laporan/neraca",
+    icon: Landmark,
   },
 ];
 
