@@ -146,8 +146,8 @@ Checklist:
 - [x] Status Balance / Tidak Balance tampil
 - [x] npm run lint berhasil
 - [x] npm run build berhasil
-- [ ] Commit berhasil
-- [ ] Push GitHub berhasil
+- [x] Commit berhasil
+- [x] Push GitHub berhasil
 
 Acceptance criteria:
 
@@ -233,8 +233,8 @@ Checklist:
 - [x] Status seimbang / tidak seimbang tampil
 - [x] npm run lint berhasil
 - [x] npm run build berhasil
-- [ ] Commit berhasil
-- [ ] Push GitHub berhasil
+- [x] Commit berhasil
+- [x] Push GitHub berhasil
 
 Acceptance criteria:
 
