@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
@@ -87,6 +87,12 @@ const reportShortcuts: ReportShortcut[] = [
     description: "Lihat posisi aset, kewajiban, ekuitas, dan keseimbangan laporan.",
     href: "/unit/dashboard/laporan/neraca",
     icon: Landmark,
+  },
+  {
+    title: "Perubahan Ekuitas",
+    description: "Lihat saldo awal, penambahan, pengurangan, laba/rugi berjalan, dan saldo akhir ekuitas.",
+    href: "/unit/dashboard/laporan/perubahan-ekuitas",
+    icon: TrendingUp,
   },
 ];
 
