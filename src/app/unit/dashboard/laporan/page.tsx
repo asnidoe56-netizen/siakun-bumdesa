@@ -94,6 +94,12 @@ const reportShortcuts: ReportShortcut[] = [
     href: "/unit/dashboard/laporan/perubahan-ekuitas",
     icon: TrendingUp,
   },
+  {
+    title: "Arus Kas",
+    description: "Lihat penerimaan dan pengeluaran kas dari aktivitas operasi, investasi, dan pendanaan.",
+    href: "/unit/dashboard/laporan/arus-kas",
+    icon: ReceiptText,
+  },
 ];
 
 const reportPageStyles = {
