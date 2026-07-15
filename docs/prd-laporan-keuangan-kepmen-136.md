@@ -71,7 +71,7 @@ Sub-route laporan:
 - [x] Neraca / Laporan Posisi Keuangan
 - [x] Laporan Perubahan Ekuitas
 - [x] Laporan Arus Kas
-- [ ] Catatan atas Laporan Keuangan / CaLK
+- [x] Catatan atas Laporan Keuangan / CaLK
 - [ ] Export PDF
 - [ ] Export Excel
 
@@ -355,7 +355,18 @@ Acceptance criteria:
 
 ## 10. Catatan atas Laporan Keuangan / CaLK
 
-Status: Belum dibuat.
+Status: Selesai tahap awal dan sudah terintegrasi dengan Neraca serta Laporan Laba Rugi.
+
+Commit implementasi: 017a30c - feat: add financial statement notes report.
+
+Catatan implementasi:
+
+- CaLK mengambil ulang data Neraca dan Laporan Laba Rugi tanpa menghitung jurnal dari awal.
+- Identitas BUM Desa, unit usaha, kode unit, kategori usaha, periode, dan penyusun ditampilkan.
+- Basis penyusunan dan ringkasan kebijakan akuntansi tersedia sebagai narasi tahap awal.
+- Rincian kas dan setara kas, piutang, persediaan, aset tetap, aset lainnya, kewajiban, ekuitas, pendapatan, serta harga pokok dan beban ditampilkan.
+- Validasi memastikan Neraca seimbang dan laba/rugi konsisten dengan laporan utama.
+- Route dan shortcut CaLK telah diuji melalui server lokal dengan respons HTTP 200.
 
 File target:
 
@@ -364,26 +375,26 @@ File target:
 
 Checklist:
 
-- [ ] Helper data CaLK dibuat
-- [ ] Halaman CaLK dibuat
-- [ ] Route /unit/dashboard/laporan/calk aktif
-- [ ] Shortcut di halaman Laporan Unit ditambahkan
-- [ ] Identitas BUMDes tampil
-- [ ] Identitas unit usaha tampil
-- [ ] Periode laporan tampil
-- [ ] Basis penyusunan laporan tampil
-- [ ] Ringkasan kebijakan akuntansi tampil
-- [ ] Rincian kas dan bank tampil
-- [ ] Rincian piutang tampil
-- [ ] Rincian persediaan tampil
-- [ ] Rincian aset tetap tampil
-- [ ] Rincian utang tampil
-- [ ] Rincian ekuitas tampil
-- [ ] Rincian pendapatan dan beban tampil
-- [ ] npm run lint berhasil
-- [ ] npm run build berhasil
-- [ ] Commit berhasil
-- [ ] Push GitHub berhasil
+- [x] Helper data CaLK dibuat
+- [x] Halaman CaLK dibuat
+- [x] Route /unit/dashboard/laporan/calk aktif
+- [x] Shortcut di halaman Laporan Unit ditambahkan
+- [x] Identitas BUMDes tampil
+- [x] Identitas unit usaha tampil
+- [x] Periode laporan tampil
+- [x] Basis penyusunan laporan tampil
+- [x] Ringkasan kebijakan akuntansi tampil
+- [x] Rincian kas dan bank tampil
+- [x] Rincian piutang tampil
+- [x] Rincian persediaan tampil
+- [x] Rincian aset tetap tampil
+- [x] Rincian utang tampil
+- [x] Rincian ekuitas tampil
+- [x] Rincian pendapatan dan beban tampil
+- [x] npm run lint berhasil
+- [x] npm run build berhasil
+- [x] Commit berhasil
+- [x] Push GitHub berhasil
 
 ---
 
@@ -469,9 +480,9 @@ Satu laporan dianggap selesai jika:
 - [x] Neraca / Laporan Posisi Keuangan
 - [x] Laporan Perubahan Ekuitas
 - [x] Laporan Arus Kas
-- [ ] CaLK
+- [x] CaLK
 - [ ] Export PDF / Excel
 
 Catatan penting:
 
-Laporan Arus Kas tahap awal sudah selesai dan sudah memakai format penyajian Kepmendesa 136 Tahun 2022. Lanjut berikutnya ke Catatan atas Laporan Keuangan / CaLK.
+Catatan atas Laporan Keuangan / CaLK tahap awal sudah selesai dan sudah terintegrasi dengan Neraca serta Laporan Laba Rugi. Seluruh laporan utama selesai; tahap berikutnya adalah Export PDF dan Excel.
