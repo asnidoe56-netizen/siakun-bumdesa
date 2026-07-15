@@ -1,4 +1,4 @@
-﻿# PRD Modul Laporan Keuangan SiAkun BUM Desa
+# PRD Modul Laporan Keuangan SiAkun BUM Desa
 
 ## Status Dokumen
 
@@ -6,6 +6,7 @@
 - Modul: Laporan Keuangan Unit Usaha
 - Acuan utama: Kepmendesa 136 Tahun 2022
 - Status: Aktif
+- Update terakhir: 2026-07-15
 - Tujuan: Menjadi panduan kerja dan checklist progres implementasi laporan.
 
 ---
@@ -68,8 +69,8 @@ Sub-route laporan:
 - [x] Neraca Saldo
 - [x] Laporan Laba Rugi
 - [x] Neraca / Laporan Posisi Keuangan
-- [ ] Laporan Perubahan Ekuitas
-- [ ] Laporan Arus Kas
+- [x] Laporan Perubahan Ekuitas
+- [x] Laporan Arus Kas
 - [ ] Catatan atas Laporan Keuangan / CaLK
 - [ ] Export PDF
 - [ ] Export Excel
@@ -241,20 +242,22 @@ Acceptance criteria:
 - [x] Akun 1.x masuk Aset
 - [x] Akun 2.x masuk Kewajiban
 - [x] Akun 3.x masuk Ekuitas
-- [ ] Nilai ekuitas konsisten dengan Laporan Perubahan Ekuitas
+- [x] Nilai ekuitas konsisten dengan Laporan Perubahan Ekuitas
 
 ---
 
 ## 8. Laporan Perubahan Ekuitas
 
-Status: Belum dibuat.
+Status: Selesai tahap awal dan sudah terintegrasi.
+
+Commit implementasi: fb0f710 - feat: add equity changes report.
 
 File target:
 
 - src/lib/unit/get-equity-changes-report-data.ts
 - src/app/unit/dashboard/laporan/perubahan-ekuitas/page.tsx
 
-Struktur awal:
+Struktur implementasi:
 
 - Ekuitas Awal
 - Penyertaan Modal
@@ -266,39 +269,50 @@ Struktur awal:
 
 Checklist:
 
-- [ ] Helper data Perubahan Ekuitas dibuat
-- [ ] Halaman Perubahan Ekuitas dibuat
-- [ ] Route /unit/dashboard/laporan/perubahan-ekuitas aktif
-- [ ] Shortcut di halaman Laporan Unit ditambahkan
-- [ ] Filter periode tersedia
-- [ ] Ekuitas awal tampil
-- [ ] Penambahan modal tampil
-- [ ] Laba/rugi bersih periode berjalan tampil
-- [ ] Distribusi / pembagian hasil usaha tampil
-- [ ] Koreksi ekuitas tampil
-- [ ] Ekuitas akhir tampil
-- [ ] npm run lint berhasil
-- [ ] npm run build berhasil
-- [ ] Commit berhasil
-- [ ] Push GitHub berhasil
+- [x] Helper data Perubahan Ekuitas dibuat
+- [x] Halaman Perubahan Ekuitas dibuat
+- [x] Route /unit/dashboard/laporan/perubahan-ekuitas aktif
+- [x] Shortcut di halaman Laporan Unit ditambahkan
+- [x] Filter periode tersedia
+- [x] Ekuitas awal tampil
+- [x] Penambahan modal tampil
+- [x] Laba/rugi bersih periode berjalan tampil
+- [x] Distribusi / pembagian hasil usaha tampil
+- [x] Koreksi ekuitas tampil
+- [x] Ekuitas akhir tampil
+- [x] npm run lint berhasil
+- [x] npm run build berhasil
+- [x] Commit berhasil
+- [x] Push GitHub berhasil
 
 Acceptance criteria:
 
-- [ ] Laba/rugi bersih tersambung dari Laporan Laba Rugi
-- [ ] Ekuitas akhir sama dengan nilai ekuitas di Neraca
+- [x] Laba/rugi bersih tersambung dari Laporan Laba Rugi
+- [x] Ekuitas akhir sama dengan nilai ekuitas di Neraca
 
 ---
 
 ## 9. Laporan Arus Kas
 
-Status: Belum dibuat.
+Status: Selesai tahap awal dengan metode langsung dan format penyajian Kepmendesa 136 Tahun 2022.
+
+Commit implementasi: 2d5b50c - feat: add Kepmendesa 136 cash flow report.
+
+Catatan implementasi:
+
+- Laporan utama memakai kolom No., Uraian, dan Jumlah (Rp).
+- Arus kas dikelompokkan menjadi aktivitas operasi, investasi, dan pendanaan.
+- Saldo awal, kenaikan atau penurunan kas, dan saldo akhir direkonsiliasi.
+- Rincian jurnal tetap tersedia sebagai audit trail.
+- Transfer internal antar-akun kas dikeluarkan dari arus kas eksternal.
+- Alokasi kas antarunit disajikan pada laporan unit dan harus dieliminasi pada laporan gabungan BUM Desa.
 
 File target:
 
 - src/lib/unit/get-cash-flow-report-data.ts
 - src/app/unit/dashboard/laporan/arus-kas/page.tsx
 
-Struktur awal:
+Struktur implementasi:
 
 - Arus Kas dari Aktivitas Operasi
 - Arus Kas dari Aktivitas Investasi
@@ -314,28 +328,28 @@ Sumber akun kas:
 
 Checklist:
 
-- [ ] Helper data Arus Kas dibuat
-- [ ] Halaman Arus Kas dibuat
-- [ ] Route /unit/dashboard/laporan/arus-kas aktif
-- [ ] Shortcut di halaman Laporan Unit ditambahkan
-- [ ] Filter periode tersedia
-- [ ] Arus kas operasi tampil
-- [ ] Arus kas investasi tampil
-- [ ] Arus kas pendanaan tampil
-- [ ] Kenaikan / penurunan kas bersih tampil
-- [ ] Kas awal tampil
-- [ ] Kas akhir tampil
-- [ ] npm run lint berhasil
-- [ ] npm run build berhasil
-- [ ] Commit berhasil
-- [ ] Push GitHub berhasil
+- [x] Helper data Arus Kas dibuat
+- [x] Halaman Arus Kas dibuat
+- [x] Route /unit/dashboard/laporan/arus-kas aktif
+- [x] Shortcut di halaman Laporan Unit ditambahkan
+- [x] Filter periode tersedia
+- [x] Arus kas operasi tampil
+- [x] Arus kas investasi tampil
+- [x] Arus kas pendanaan tampil
+- [x] Kenaikan / penurunan kas bersih tampil
+- [x] Kas awal tampil
+- [x] Kas akhir tampil
+- [x] npm run lint berhasil
+- [x] npm run build berhasil
+- [x] Commit berhasil
+- [x] Push GitHub berhasil
 
 Acceptance criteria:
 
-- [ ] Tidak hanya membaca Kas Tunai 1.1.01.01
-- [ ] Membaca seluruh akun kas, bank, dan setara kas aktif
-- [ ] Saldo kas akhir sama dengan kas dan setara kas di Neraca
-- [ ] Arus kas memakai metode langsung
+- [x] Tidak hanya membaca Kas Tunai 1.1.01.01
+- [x] Membaca seluruh akun kas, bank, dan setara kas aktif
+- [x] Saldo kas akhir sama dengan kas dan setara kas di Neraca
+- [x] Arus kas memakai metode langsung
 
 ---
 
@@ -453,11 +467,11 @@ Satu laporan dianggap selesai jika:
 - [x] Neraca Saldo
 - [x] Laporan Laba Rugi
 - [x] Neraca / Laporan Posisi Keuangan
-- [ ] Laporan Perubahan Ekuitas
-- [ ] Laporan Arus Kas
+- [x] Laporan Perubahan Ekuitas
+- [x] Laporan Arus Kas
 - [ ] CaLK
 - [ ] Export PDF / Excel
 
 Catatan penting:
 
-Neraca / Laporan Posisi Keuangan tahap awal sudah selesai. Lanjut berikutnya ke Laporan Perubahan Ekuitas.
+Laporan Arus Kas tahap awal sudah selesai dan sudah memakai format penyajian Kepmendesa 136 Tahun 2022. Lanjut berikutnya ke Catatan atas Laporan Keuangan / CaLK.
