@@ -12,6 +12,7 @@ import {
   Truck,
   TrendingUp,
   Landmark,
+  FileText,
 } from "lucide-react";
 import { PageContainer } from "@/components/layouts/page-container";
 import { PageHeader } from "@/components/layouts/page-header";
@@ -99,6 +100,12 @@ const reportShortcuts: ReportShortcut[] = [
     description: "Lihat penerimaan dan pengeluaran kas dari aktivitas operasi, investasi, dan pendanaan.",
     href: "/unit/dashboard/laporan/arus-kas",
     icon: ReceiptText,
+  },
+  {
+    title: "CaLK",
+    description: "Lihat basis penyusunan, kebijakan akuntansi, dan rincian pos laporan keuangan.",
+    href: "/unit/dashboard/laporan/calk",
+    icon: FileText,
   },
 ];
 
